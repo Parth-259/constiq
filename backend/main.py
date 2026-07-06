@@ -61,6 +61,22 @@ def health() -> dict:
     return {"status": "ok"}
 
 
+@app.get("/api/health/llm")
+def health_llm() -> dict:
+    """Deep probe: reports which LLM provider is active and whether a live
+    one-token call succeeds. The error text never includes the key itself."""
+    from backend import llm
+
+    active = llm.provider()
+    if active == "none":
+        return {"provider": active, "ok": False, "error": "no API key configured"}
+    try:
+        llm.complete("Reply with exactly: OK", "ping", max_tokens=5, tier="smart")
+        return {"provider": active, "ok": True, "error": None}
+    except Exception as exc:
+        return {"provider": active, "ok": False, "error": str(exc)[:500]}
+
+
 @app.on_event("startup")
 def startup() -> None:
     """Create tables and seed the synthetic demo data (skippable for tests)."""
