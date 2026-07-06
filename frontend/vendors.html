@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ConstructIQ - Vendors Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-indicator {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for data-heavy views */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Glassmorphism for specific UI elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1f2937",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "primary": "#0a1422",
+                        "on-tertiary-container": "#8d9092",
+                        "on-surface-variant": "#44474c",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#fd761a",
+                        "on-background": "#0b1c30",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-surface": "#0b1c30",
+                        "surface-tint": "#555f6f",
+                        "primary-fixed-dim": "#bdc7d9",
+                        "tertiary-container": "#25292b",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c5c6cc",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "inverse-primary": "#bdc7d9",
+                        "outline": "#75777c",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#d9e3f6",
+                        "secondary": "#9d4300",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#8690a1",
+                        "tertiary": "#111416",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c2400",
+                        "on-primary-fixed": "#121c2a",
+                        "on-primary-fixed-variant": "#3d4756",
+                        "on-secondary-fixed": "#341100",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container": "#e5eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-tabular": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex overflow-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary dark:bg-primary flex flex-col py-6 gap-y-4 z-50">
+<div class="px-6 mb-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-black text-on-primary">ConstructIQ</h2>
+<p class="font-label-caps text-[10px] text-on-primary-container uppercase tracking-widest">Enterprise Procurement</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Navigation Items Mapping -->
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 hover:bg-primary-fixed-dim/10 transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl group-hover:scale-110 transition-transform" data-icon="inventory">inventory</span>
+<span class="font-label-caps text-label-caps">Current Projects</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 hover:bg-primary-fixed-dim/10 transition-all duration-200 rounded-lg group" href="chat.html">
+<span class="material-symbols-outlined mr-3 text-xl group-hover:scale-110 transition-transform" data-icon="upload_file">upload_file</span>
+<span class="font-label-caps text-label-caps">PDF Ingestion</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 hover:bg-primary-fixed-dim/10 transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl group-hover:scale-110 transition-transform" data-icon="folder_shared">folder_shared</span>
+<span class="font-label-caps text-label-caps">Doc Library</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 hover:bg-primary-fixed-dim/10 transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl group-hover:scale-110 transition-transform" data-icon="settings_applications">settings_applications</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full bg-secondary-container text-on-secondary-container font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all" id="btn-new-procurement">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-label-caps text-label-caps">New Procurement</span>
+</button>
+</div>
+<div class="mt-auto px-4 border-t border-on-primary-container/10 pt-4">
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 mx-2 my-1 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps">System Health</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 mx-2 my-1 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="support_agent">support_agent</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[280px] h-screen overflow-y-auto flex flex-col">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="sticky top-0 z-40 bg-surface dark:bg-primary border-b border-outline-variant dark:border-outline flex items-center justify-between px-6 py-3 w-full max-w-[1600px] mx-auto">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full w-64 focus:ring-2 focus:ring-secondary-container transition-all text-body-md" placeholder="Global Search..." type="text"/>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-on-primary-container pb-2 font-label-caps text-label-caps hover:text-primary transition-colors" data-nav="chat" href="chat.html">Chat</a>
+<a class="text-on-surface-variant dark:text-on-primary-container pb-2 font-label-caps text-label-caps hover:text-primary transition-colors" data-nav="risk" href="risk.html">Risk Dashboard</a>
+<a class="text-on-surface-variant dark:text-on-primary-container pb-2 font-label-caps text-label-caps hover:text-primary transition-colors" data-nav="vendors" href="vendors.html">Vendors</a>
+<a class="text-on-surface-variant dark:text-on-primary-container pb-2 font-label-caps text-label-caps hover:text-primary transition-colors" data-nav="negotiation" href="negotiation.html">Negotiation</a>
+<a class="text-on-surface-variant dark:text-on-primary-container pb-2 font-label-caps text-label-caps hover:text-primary transition-colors" data-nav="po" href="purchase_orders.html">Purchase Orders</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional close-up headshot of a corporate procurement executive in a high-tech office environment. The lighting is crisp and cool-toned with subtle blue and gray accents, matching the industrial enterprise aesthetic. The background is slightly blurred showing glass architectural elements and minimalist design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADnW-xoddv45b4PnxPfubY8GAHqitvVqHaoIqs26DrYx1EtwbAEruIXQTUsNZafqA2Gj2NqGCyxVX3YDA2LoD3lBXRhoQjhn0PYfEmFajYetjc2ZG9zwuRnHgNq1CJTjdJhUkLov7gsQT5LA0nhiXdbDDwoTPrzPvO3LQiDZsk19ZZatrQiYtWSgsGAwis7_cbP6DZdC7AyHJi4hgOvKeKs7MSFwOM8sQA53EI6ZAYoKEjeO9f34qi"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<section class="p-lg max-w-[1600px] mx-auto w-full space-y-6">
+<!-- Context & Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary">Vendor Directory</h1>
+<p class="text-on-surface-variant font-body-lg">Manage strategic supplier relationships and performance metrics across the enterprise.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="glass-panel px-4 py-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<p class="text-[10px] font-label-caps text-on-surface-variant leading-none">PROJECT ID</p>
+<p class="font-data-tabular text-sm font-bold" id="project-id-chip">PRJ-2024-001</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg flex items-center gap-2 font-bold hover:opacity-90 transition-opacity" id="btn-onboard">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                        Onboard Vendor
+                    </button>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="glass-panel p-4 rounded-xl flex flex-wrap items-center gap-4">
+<div class="relative flex-1 min-w-[300px]">
+<span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="filter_list">filter_list</span>
+</span>
+<input class="pl-11 pr-4 py-3 bg-white border border-outline-variant rounded-lg w-full focus:ring-2 focus:ring-secondary-container transition-all text-body-md shadow-sm" id="filter-material" placeholder="Filter by material name..." type="text"/>
+</div>
+<div class="flex gap-2">
+<select class="bg-white border border-outline-variant rounded-lg px-4 py-3 font-label-caps text-label-caps focus:ring-2 focus:ring-secondary-container" id="filter-region">
+<option value="">All Regions</option>
+</select>
+<select class="bg-white border border-outline-variant rounded-lg px-4 py-3 font-label-caps text-label-caps focus:ring-2 focus:ring-secondary-container" id="filter-rating">
+<option value="">Rating (All)</option>
+<option value="4">4.0+ Stars</option>
+<option value="3">3.0+ Stars</option>
+</select>
+<button class="p-3 border border-outline-variant rounded-lg bg-white hover:bg-surface-container-low transition-colors" id="btn-export" title="Export vendor list">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="file_download">file_download</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">
+<div class="flex items-center gap-2 cursor-pointer hover:text-primary">
+                                    Vendor Name
+                                    <span class="material-symbols-outlined text-sm" data-icon="unfold_more">unfold_more</span>
+</div>
+</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">Rating</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">Primary Material</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">Region</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">
+<div class="flex items-center gap-2 cursor-pointer hover:text-primary">
+                                    Avg. Lead Time
+                                    <span class="material-symbols-outlined text-sm" data-icon="arrow_downward">arrow_downward</span>
+</div>
+</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">Contact Info</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant" id="vendor-tbody">
+<tr>
+<td class="px-6 py-10 text-center text-on-surface-variant font-body-md" colspan="7">Loading vendors…</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<p class="text-xs font-label-caps text-on-surface-variant" id="page-info">Showing 0 of 0 vendors</p>
+<div class="flex items-center gap-2" id="pager">
+<button class="p-1 hover:bg-surface-container-highest rounded transition-colors disabled:opacity-30" disabled="" id="page-prev">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<span class="flex items-center gap-2" id="page-buttons"></span>
+<button class="p-1 hover:bg-surface-container-highest rounded transition-colors disabled:opacity-30" disabled="" id="page-next">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bento Highlights Bottom Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Risk Monitoring Card -->
+<div class="bg-white border-t-2 border-error p-6 rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-caps text-label-caps text-error">Supply Chain Risk</span>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2">Lead Time Volatility</h3>
+<p class="text-on-surface-variant font-body-md" id="risk-card-text">Analysing vendor lead times…</p>
+</div>
+<a class="mt-4 flex items-center gap-2 text-secondary font-bold text-sm hover:underline" href="risk.html">
+                        View Mitigation Plan
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- PDF Ingestion Quick Actions -->
+<div class="bg-primary p-6 rounded-xl shadow-sm text-on-primary relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline-sm text-headline-sm mb-2">Ingest New Data</h3>
+<p class="text-on-primary-container text-sm mb-6">Drop your vendor quotes (PDF) here to automatically extract material pricing and lead times.</p>
+<a class="border-2 border-dashed border-on-primary-container/30 rounded-lg p-8 flex flex-col items-center justify-center hover:bg-white/5 transition-colors cursor-pointer group" href="chat.html">
+<span class="material-symbols-outlined text-4xl mb-2 group-hover:scale-110 transition-transform" data-icon="cloud_upload">cloud_upload</span>
+<p class="font-label-caps text-[10px] uppercase">Upload Quote PDF</p>
+</a>
+</div>
+</div>
+<!-- AI Statistics Card -->
+<div class="bg-white border border-outline-variant p-6 rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="insights">insights</span>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant">AI VENDOR ANALYTICS</h3>
+</div>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between items-end">
+<span class="text-sm font-body-md">Vendor Performance Index</span>
+<span class="text-lg font-bold text-primary font-data-tabular" id="vpi-value">—</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" id="vpi-bar" style="width: 0%;"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-4">
+<div>
+<p class="text-[10px] font-label-caps text-on-surface-variant">AVERAGE RATING</p>
+<p class="text-lg font-bold text-green-600 font-data-tabular" id="stat-avg-rating">—</p>
+</div>
+<div>
+<p class="text-[10px] font-label-caps text-on-surface-variant">AVG LEAD TIME</p>
+<p class="text-lg font-bold text-primary font-data-tabular" id="stat-avg-lead">—</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB for quick action (Contextual Suppression Logic applied if navigation is focused on details, but here it fits the Dashboard/Directory) -->
+<a class="fixed bottom-8 right-8 w-14 h-14 bg-secondary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-50 group" href="chat.html">
+<span class="material-symbols-outlined text-2xl" data-icon="chat_bubble">chat_bubble</span>
+<span class="absolute right-16 bg-primary text-white px-3 py-1.5 rounded-lg font-label-caps text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Ask Assistant</span>
+</a>
+<script src="js/api.js"></script>
+<script>
+(function () {
+    "use strict";
+
+    var PER_PAGE = 8;
+    var CHIP_STYLES = [
+        "bg-blue-50 text-blue-700 border-blue-100",
+        "bg-stone-50 text-stone-700 border-stone-200",
+        "bg-orange-50 text-orange-700 border-orange-100",
+        "bg-purple-50 text-purple-700 border-purple-100"
+    ];
+
+    var state = {
+        vendors: [],      // all vendors from the API
+        filtered: [],     // vendors after client-side filters
+        page: 1,
+        loaded: false,
+        loadError: null
+    };
+
+    var tbody = document.getElementById("vendor-tbody");
+    var pageInfo = document.getElementById("page-info");
+    var pageButtons = document.getElementById("page-buttons");
+    var prevBtn = document.getElementById("page-prev");
+    var nextBtn = document.getElementById("page-next");
+    var materialInput = document.getElementById("filter-material");
+    var regionSelect = document.getElementById("filter-region");
+    var ratingSelect = document.getElementById("filter-rating");
+
+    // ------------------------------------------------------------- helpers
+
+    function initials(name) {
+        var parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+        if (parts.length === 0) return "??";
+        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    // Material-symbol star row matching the design (full / half / empty).
+    function starIconsHtml(rating) {
+        var r = Number(rating);
+        if (!isFinite(r)) r = 0;
+        if (r < 0) r = 0;
+        if (r > 5) r = 5;
+        var out = "";
+        for (var i = 1; i <= 5; i++) {
+            if (r >= i) {
+                out += '<span class="material-symbols-outlined text-[18px]" data-icon="star" style="font-variation-settings: \'FILL\' 1;">star</span>';
+            } else if (r >= i - 0.5) {
+                out += '<span class="material-symbols-outlined text-[18px]" data-icon="star_half" style="font-variation-settings: \'FILL\' 1;">star_half</span>';
+            } else {
+                out += '<span class="material-symbols-outlined text-[18px]" data-icon="star" style="font-variation-settings: \'FILL\' 0;">star</span>';
+            }
+        }
+        return out;
+    }
+
+    function fmtPct(n) {
+        var v = Number(n);
+        if (!isFinite(v)) return "—";
+        return (Math.round(v * 10) / 10).toFixed(1) + "%";
+    }
+
+    // ------------------------------------------------------------- rendering
+
+    function vendorRowHtml(v, chipIdx) {
+        var firstMaterial = (v.materials_supplied && v.materials_supplied.length)
+            ? v.materials_supplied[0]
+            : "N/A";
+        var chip = CHIP_STYLES[chipIdx % CHIP_STYLES.length];
+        var ratingNum = isFinite(Number(v.rating)) ? Number(v.rating).toFixed(1) : "—";
+        var leadTime = isFinite(Number(v.avg_delivery_days))
+            ? Number(v.avg_delivery_days) + " Days"
+            : "—";
+        return '<tr class="hover:bg-surface-container-low/50 transition-colors group">' +
+            '<td class="px-6 py-4">' +
+                '<div class="flex items-center gap-3">' +
+                    '<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-primary border border-outline-variant">' + escapeHtml(initials(v.name)) + '</div>' +
+                    '<span class="font-body-md font-bold text-primary">' + escapeHtml(v.name) + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td class="px-6 py-4">' +
+                '<div class="flex items-center gap-0.5 text-secondary">' +
+                    starIconsHtml(v.rating) +
+                    '<span class="ml-2 font-data-tabular text-on-surface-variant">' + escapeHtml(ratingNum) + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td class="px-6 py-4">' +
+                '<span class="inline-block px-2 py-1 ' + chip + ' border rounded text-[11px] font-label-caps uppercase">' + escapeHtml(firstMaterial) + '</span>' +
+            '</td>' +
+            '<td class="px-6 py-4 font-body-md">' + escapeHtml(v.region || "—") + '</td>' +
+            '<td class="px-6 py-4 font-data-tabular">' + escapeHtml(leadTime) + '</td>' +
+            '<td class="px-6 py-4">' +
+                '<div class="flex flex-col">' +
+                    '<span class="font-data-tabular text-data-tabular">' + escapeHtml(v.contact_email || "—") + '</span>' +
+                    '<span class="font-data-tabular text-xs text-on-surface-variant">' + escapeHtml(v.contact_phone || "—") + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td class="px-6 py-4 text-right">' +
+                '<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all" data-row-action="1">' +
+                    '<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>' +
+                '</button>' +
+            '</td>' +
+        '</tr>';
+    }
+
+    function insightRowHtml() {
+        // AI Insight: computed client-side from the currently filtered set —
+        // vendor with the LOWEST historical on-time percentage.
+        var pool = state.filtered.length ? state.filtered : state.vendors;
+        if (!pool.length) return "";
+        var worst = pool[0];
+        for (var i = 1; i < pool.length; i++) {
+            if (Number(pool[i].historical_on_time_pct) < Number(worst.historical_on_time_pct)) {
+                worst = pool[i];
+            }
+        }
+        var pct = Math.round(Number(worst.historical_on_time_pct) * 10) / 10;
+        var text = "AI Insight: " + worst.name + " has an on-time rate of " + pct +
+            "% — consider fixed delivery schedules or an alternate for critical-path materials.";
+        return '<tr class="bg-orange-50/30">' +
+            '<td class="px-6 py-3 border-l-4 border-secondary" colspan="7">' +
+                '<div class="flex items-center gap-3">' +
+                    '<span class="material-symbols-outlined text-secondary" data-icon="smart_toy">smart_toy</span>' +
+                    '<p class="font-body-md text-secondary italic">' + escapeHtml(text) + '</p>' +
+                '</div>' +
+            '</td>' +
+        '</tr>';
+    }
+
+    function emptyRowHtml(message) {
+        return '<tr>' +
+            '<td class="px-6 py-12 text-center" colspan="7">' +
+                '<div class="flex flex-col items-center gap-2 text-on-surface-variant">' +
+                    '<span class="material-symbols-outlined text-4xl" data-icon="search_off">search_off</span>' +
+                    '<p class="font-body-md">' + escapeHtml(message) + '</p>' +
+                '</div>' +
+            '</td>' +
+        '</tr>';
+    }
+
+    function renderTable() {
+        var total = state.filtered.length;
+        var totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+        if (state.page > totalPages) state.page = totalPages;
+        if (state.page < 1) state.page = 1;
+
+        var start = (state.page - 1) * PER_PAGE;
+        var pageVendors = state.filtered.slice(start, start + PER_PAGE);
+
+        if (state.loadError) {
+            tbody.innerHTML = emptyRowHtml("Could not load vendors — " + state.loadError);
+        } else if (!state.loaded) {
+            tbody.innerHTML = '<tr><td class="px-6 py-10 text-center text-on-surface-variant font-body-md" colspan="7">Loading vendors…</td></tr>';
+        } else if (!state.vendors.length) {
+            tbody.innerHTML = emptyRowHtml("No vendors in the directory yet. Ingest vendor data to get started.");
+        } else if (!pageVendors.length) {
+            tbody.innerHTML = emptyRowHtml("No vendors match the current filters.");
+        } else {
+            var html = "";
+            for (var i = 0; i < pageVendors.length; i++) {
+                html += vendorRowHtml(pageVendors[i], start + i);
+                if (i === 2) html += insightRowHtml(); // inline AI insight after 3rd row
+            }
+            if (pageVendors.length > 0 && pageVendors.length < 3) html += insightRowHtml();
+            tbody.innerHTML = html;
+        }
+
+        // Footer: "Showing X of N vendors"
+        if (total === 0) {
+            pageInfo.textContent = "Showing 0 of 0 vendors";
+        } else {
+            var from = start + 1;
+            var to = Math.min(start + PER_PAGE, total);
+            pageInfo.textContent = "Showing " + from + "-" + to + " of " + total + " vendors";
+        }
+
+        // Pager buttons
+        prevBtn.disabled = state.page <= 1;
+        nextBtn.disabled = state.page >= totalPages;
+        var btns = "";
+        for (var p = 1; p <= totalPages; p++) {
+            if (p === state.page) {
+                btns += '<button class="w-8 h-8 bg-primary text-on-primary rounded text-xs font-bold" data-page="' + p + '">' + p + '</button>';
+            } else {
+                btns += '<button class="w-8 h-8 hover:bg-surface-container-highest rounded text-xs" data-page="' + p + '">' + p + '</button>';
+            }
+        }
+        pageButtons.innerHTML = btns;
+    }
+
+    function renderBottomCards() {
+        var riskText = document.getElementById("risk-card-text");
+        var vpiValue = document.getElementById("vpi-value");
+        var vpiBar = document.getElementById("vpi-bar");
+        var avgRatingEl = document.getElementById("stat-avg-rating");
+        var avgLeadEl = document.getElementById("stat-avg-lead");
+
+        if (!state.vendors.length) {
+            riskText.textContent = state.loadError
+                ? "Vendor data unavailable — could not reach the API."
+                : "No vendor data available yet.";
+            vpiValue.textContent = "—";
+            vpiBar.style.width = "0%";
+            avgRatingEl.textContent = "—";
+            avgLeadEl.textContent = "—";
+            return;
+        }
+
+        // Supply Chain Risk: vendor with the MAX average delivery days.
+        var slowest = state.vendors[0];
+        var sumOnTime = 0, sumRating = 0, sumLead = 0;
+        for (var i = 0; i < state.vendors.length; i++) {
+            var v = state.vendors[i];
+            if (Number(v.avg_delivery_days) > Number(slowest.avg_delivery_days)) slowest = v;
+            sumOnTime += Number(v.historical_on_time_pct) || 0;
+            sumRating += Number(v.rating) || 0;
+            sumLead += Number(v.avg_delivery_days) || 0;
+        }
+        riskText.textContent = slowest.name + " has the longest average lead time at " +
+            slowest.avg_delivery_days + " days — sequence critical-path orders early and hold buffer stock.";
+
+        // Vendor Performance Index: average on-time percentage.
+        var avgOnTime = sumOnTime / state.vendors.length;
+        vpiValue.textContent = fmtPct(avgOnTime);
+        vpiBar.style.width = Math.max(0, Math.min(100, avgOnTime)) + "%";
+
+        avgRatingEl.textContent = (sumRating / state.vendors.length).toFixed(1) + " / 5";
+        avgLeadEl.textContent = Math.round(sumLead / state.vendors.length) + " Days";
+    }
+
+    // ------------------------------------------------------------- filtering
+
+    function populateRegions() {
+        var seen = {};
+        var regions = [];
+        for (var i = 0; i < state.vendors.length; i++) {
+            var r = state.vendors[i].region;
+            if (r && !seen[r]) { seen[r] = true; regions.push(r); }
+        }
+        regions.sort();
+        var current = regionSelect.value;
+        regionSelect.innerHTML = "";
+        var allOpt = document.createElement("option");
+        allOpt.value = "";
+        allOpt.textContent = "All Regions";
+        regionSelect.appendChild(allOpt);
+        for (var j = 0; j < regions.length; j++) {
+            var opt = document.createElement("option");
+            opt.value = regions[j];
+            opt.textContent = regions[j];
+            regionSelect.appendChild(opt);
+        }
+        regionSelect.value = current && seen[current] ? current : "";
+    }
+
+    function applyFilters() {
+        var q = materialInput.value.trim().toLowerCase();
+        var region = regionSelect.value;
+        var minRating = ratingSelect.value ? Number(ratingSelect.value) : null;
+
+        state.filtered = state.vendors.filter(function (v) {
+            if (q) {
+                var mats = v.materials_supplied || [];
+                var hit = false;
+                for (var i = 0; i < mats.length; i++) {
+                    if (String(mats[i]).toLowerCase().indexOf(q) !== -1) { hit = true; break; }
+                }
+                if (!hit) return false;
+            }
+            if (region && v.region !== region) return false;
+            if (minRating !== null && !(Number(v.rating) >= minRating)) return false;
+            return true;
+        });
+        state.page = 1;
+        renderTable();
+    }
+
+    // ------------------------------------------------------------- events
+
+    materialInput.addEventListener("input", applyFilters);
+    regionSelect.addEventListener("change", applyFilters);
+    ratingSelect.addEventListener("change", applyFilters);
+
+    prevBtn.addEventListener("click", function () {
+        if (state.page > 1) { state.page--; renderTable(); }
+    });
+    nextBtn.addEventListener("click", function () {
+        var totalPages = Math.max(1, Math.ceil(state.filtered.length / PER_PAGE));
+        if (state.page < totalPages) { state.page++; renderTable(); }
+    });
+    pageButtons.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-page]");
+        if (!btn) return;
+        state.page = Number(btn.getAttribute("data-page"));
+        renderTable();
+    });
+
+    function demoOnly() { toast("Not available in the demo prototype", "info"); }
+    document.getElementById("btn-onboard").addEventListener("click", demoOnly);
+    document.getElementById("btn-export").addEventListener("click", demoOnly);
+    document.getElementById("btn-new-procurement").addEventListener("click", demoOnly);
+    tbody.addEventListener("click", function (e) {
+        if (e.target.closest("[data-row-action]")) demoOnly();
+    });
+
+    // ------------------------------------------------------------- init
+
+    document.getElementById("project-id-chip").textContent = getProjectId();
+    wireNav("vendors");
+
+    apiGet("/api/vendors")
+        .then(function (data) {
+            state.vendors = (data && data.vendors) ? data.vendors : [];
+            state.loaded = true;
+            populateRegions();
+            state.filtered = state.vendors.slice();
+            renderTable();
+            renderBottomCards();
+        })
+        .catch(function (err) {
+            state.loaded = true;
+            state.loadError = err.message || "Unknown error";
+            toast(err.message || "Failed to load vendors", "error");
+            renderTable();
+            renderBottomCards();
+        });
+})();
+</script>
+</body></html>

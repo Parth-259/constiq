@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ConstructIQ | Negotiation Terminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1f2937",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "primary": "#0a1422",
+                        "on-tertiary-container": "#8d9092",
+                        "on-surface-variant": "#44474c",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#fd761a",
+                        "on-background": "#0b1c30",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-surface": "#0b1c30",
+                        "surface-tint": "#555f6f",
+                        "primary-fixed-dim": "#bdc7d9",
+                        "tertiary-container": "#25292b",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c5c6cc",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "inverse-primary": "#bdc7d9",
+                        "outline": "#75777c",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#d9e3f6",
+                        "secondary": "#9d4300",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#8690a1",
+                        "tertiary": "#111416",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c2400",
+                        "on-primary-fixed": "#121c2a",
+                        "on-primary-fixed-variant": "#3d4756",
+                        "on-secondary-fixed": "#341100",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container": "#e5eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-tabular": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        .chat-container { height: calc(100vh - 380px); }
+        @media (max-width: 768px) { .chat-container { height: calc(100vh - 420px); } }
+        .action-blocked { opacity: 0.4; cursor: not-allowed; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container/30">
+<!-- Top Navigation Bar -->
+<header class="bg-surface border-b border-outline-variant fixed top-0 w-full z-50">
+<div class="flex items-center justify-between px-6 py-3 w-full max-w-[1600px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-secondary">ConstructIQ</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="chat" href="chat.html">Chat</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="risk" href="risk.html">Risk Dashboard</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="vendors" href="vendors.html">Vendors</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="negotiation" href="negotiation.html">Negotiation</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="po" href="purchase_orders.html">Purchase Orders</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional user avatar representing a procurement manager in a modern construction enterprise environment. The photo is high-quality, professional, with soft studio lighting and a clean, neutral background that fits the minimalist corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd95BLDQpXo-je-pfH9GECUTMFE9pcdPElwCV2jL4WTup4zF9nly1uLLUypHffND49Pt22e47s0sOp7X-Z1sHtNZqghIoqtj5z-U7lywIxSGTylCEA3zZW-swjNiH0Xlb4-0T9m5iXVl36ku8gz_Aa9ubdn2rNz7_9Ha2a2nNuBCwM3eWfaZRsUHfYEXtzx8jSlY2wI-tjSuJTVjgAb3kjuj3LBhmDMZYgxZdUxejsVzqtW9E3vq8g"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary text-on-primary hidden md:flex flex-col py-6 gap-y-4 pt-20">
+<div class="px-6 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary-container rounded-lg flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-black leading-tight">Project Center</h2>
+<p class="text-[10px] uppercase tracking-widest opacity-70">Enterprise Procurement</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 transition-all duration-200 hover:bg-primary-fixed-dim/10 group" href="#">
+<span class="material-symbols-outlined mr-3">inventory</span>
+<span class="font-label-caps text-label-caps">Current Projects</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 transition-all duration-200 hover:bg-primary-fixed-dim/10 group" href="chat.html">
+<span class="material-symbols-outlined mr-3">upload_file</span>
+<span class="font-label-caps text-label-caps">PDF Ingestion</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 transition-all duration-200 hover:bg-primary-fixed-dim/10 group" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span>
+<span class="font-label-caps text-label-caps">Doc Library</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 my-1 flex items-center px-4 py-3 scale-95 duration-75" href="negotiation.html">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<span class="font-label-caps text-label-caps">Negotiation</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 mx-2 my-1 transition-all duration-200 hover:bg-primary-fixed-dim/10 group" href="#">
+<span class="material-symbols-outlined mr-3">settings_applications</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<button class="w-full bg-secondary-container text-on-secondary-container font-bold py-3 rounded-lg flex items-center justify-center gap-2 mb-6 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-caps text-label-caps">New Procurement</span>
+</button>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 group" href="#">
+<span class="material-symbols-outlined mr-3">analytics</span>
+<span class="font-label-caps text-label-caps">System Health</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-3 group" href="#">
+<span class="material-symbols-outlined mr-3">support_agent</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[280px] pt-16 min-h-screen">
+<div class="max-w-[1600px] mx-auto p-6 md:p-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Active Negotiation</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Refine unit prices and delivery schedules directly with verified vendors using our secure negotiation protocol.</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 border rounded-lg" id="status-pill" style="background-color: rgba(117,119,124,0.08); border-color: rgba(117,119,124,0.25);">
+<span class="w-2 h-2 rounded-full" id="status-dot" style="background-color: #75777c;"></span>
+<span class="font-label-caps text-label-caps" id="status-text" style="color: #75777c;">Status: No Active Negotiation</span>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Panel: Selection -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-white border border-outline-variant p-6 rounded-lg">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-6 uppercase">Negotiation Context</h3>
+<div class="space-y-4">
+<div>
+<label class="block font-label-caps text-[10px] text-on-surface-variant mb-2 uppercase" for="req-select">Select Requirement</label>
+<select class="w-full bg-background border border-outline-variant rounded-lg px-4 py-3 font-body-md focus:ring-2 focus:ring-secondary-container focus:border-transparent appearance-none" id="req-select">
+<option value="">Loading requirements…</option>
+</select>
+</div>
+<div>
+<label class="block font-label-caps text-[10px] text-on-surface-variant mb-2 uppercase" for="vendor-select">Select Vendor</label>
+<select class="w-full bg-background border border-outline-variant rounded-lg px-4 py-3 font-body-md focus:ring-2 focus:ring-secondary-container focus:border-transparent appearance-none" id="vendor-select">
+<option value="">Loading vendors…</option>
+</select>
+</div>
+<div>
+<label class="block font-label-caps text-[10px] text-on-surface-variant mb-2 uppercase" for="neg-select">Load Existing Negotiation</label>
+<select class="w-full bg-background border border-outline-variant rounded-lg px-4 py-3 font-body-md focus:ring-2 focus:ring-secondary-container focus:border-transparent appearance-none" id="neg-select">
+<option value="">— Select a negotiation —</option>
+</select>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity" id="btn-start">
+<span class="material-symbols-outlined">handshake</span>
+<span class="font-label-caps text-label-caps">Start Negotiation</span>
+</button>
+</div>
+<div class="mt-8 p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-1">info</span>
+<p class="text-body-md text-on-surface-variant italic" id="ai-insight">AI Insight: select a requirement and vendor, then start a negotiation to see market-reference pricing, the opening offer and the risk-adjusted target.</p>
+</div>
+</div>
+</div>
+<!-- Vendor Quick Stats -->
+<div class="bg-white border border-outline-variant p-6 rounded-lg">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Vendor Profile</h3>
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white font-black" id="vp-initials">—</div>
+<div>
+<p class="font-bold text-primary" id="vp-name">No vendor selected</p>
+<p class="text-body-md text-on-surface-variant" id="vp-tier">—</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-background rounded border border-outline-variant/50">
+<p class="text-[10px] font-label-caps text-on-surface-variant uppercase">Reliability</p>
+<p class="text-headline-sm font-bold text-primary" id="vp-reliability">—</p>
+</div>
+<div class="p-3 bg-background rounded border border-outline-variant/50">
+<p class="text-[10px] font-label-caps text-on-surface-variant uppercase">Rating</p>
+<p class="text-headline-sm font-bold text-primary" id="vp-rating">—</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Panel: Chat Negotiation -->
+<div class="col-span-12 lg:col-span-8 flex flex-col">
+<div class="bg-white border border-outline-variant rounded-lg flex flex-col overflow-hidden shadow-sm">
+<!-- Chat Header -->
+<div class="px-6 py-4 border-b border-outline-variant bg-surface flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<h3 class="font-headline-sm text-headline-sm">Transcript</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-body-md text-on-surface-variant">Negotiating since: <span id="neg-since">—</span></span>
+</div>
+</div>
+<!-- Chat Messages -->
+<div class="chat-container overflow-y-auto p-6 space-y-6 bg-[#fcfdfe]" id="chat-box">
+<div class="flex flex-col items-center justify-center h-full text-center gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-[40px] opacity-40">handshake</span>
+<p class="font-body-md">No negotiation loaded. Select a requirement and vendor, then press <span class="font-bold">Start Negotiation</span> — or load an existing one.</p>
+</div>
+</div>
+<!-- Chat Action Footer -->
+<div class="p-6 bg-surface border-t border-outline-variant">
+<div class="flex flex-col sm:flex-row gap-4 items-center">
+<button class="w-full sm:w-auto px-6 py-4 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container transition-colors group" id="btn-counter">
+<span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">reply</span>
+<span class="font-label-caps text-label-caps">Send Counter</span>
+</button>
+<button class="w-full sm:flex-1 py-4 bg-secondary-container text-on-secondary-container font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-md hover:shadow-lg active:scale-[0.98]" id="btn-approve">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-tight">Approve Offer</span>
+</button>
+<button class="w-full sm:w-auto px-4 py-4 bg-white border border-outline text-error font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-error-container/10 transition-colors" id="btn-decline">
+<span class="material-symbols-outlined">block</span>
+<span class="font-label-caps text-label-caps">Decline</span>
+</button>
+</div>
+<div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex-col sm:flex-row items-start sm:items-center justify-between gap-2" id="po-banner" style="display:none;">
+<span class="text-body-md font-bold text-green-700" id="po-banner-text">PO generated</span>
+<a class="font-label-caps text-label-caps text-secondary underline hover:opacity-80" href="purchase_orders.html">View in Purchase Orders →</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Analysis -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white border-t-2 border-green-500 p-6 rounded shadow-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-green-600">savings</span>
+                        Estimated Savings
+                    </h4>
+<p class="font-headline-md text-headline-md text-primary" id="card-savings">— <span class="text-body-md font-normal text-on-surface-variant">vs opening ask</span></p>
+</div>
+<div class="bg-white border-t-2 border-secondary p-6 rounded shadow-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">schedule</span>
+                        Lead Time Impact
+                    </h4>
+<p class="font-headline-md text-headline-md text-primary" id="card-lead">— <span class="text-body-md font-normal text-on-surface-variant">Quoted lead time</span></p>
+</div>
+<div class="bg-white border-t-2 border-blue-500 p-6 rounded shadow-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600">description</span>
+                        Contract Compliance
+                    </h4>
+<p class="font-headline-md text-headline-md text-primary" id="card-compliance">— <span class="text-body-md font-normal text-on-surface-variant">rounds · formula-driven</span></p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant flex justify-around items-center py-2 z-50">
+<button class="flex flex-col items-center p-2 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-caps">Home</span>
+</button>
+<button class="flex flex-col items-center p-2 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory</span>
+<span class="text-[10px] font-label-caps">Projects</span>
+</button>
+<button class="flex flex-col items-center p-2 text-secondary font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<span class="text-[10px] font-label-caps">Negotiate</span>
+</button>
+<button class="flex flex-col items-center p-2 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-label-caps">Settings</span>
+</button>
+</div>
+<script src="js/api.js"></script>
+<script>
+(function () {
+    "use strict";
+
+    // escapeHtml comes from js/api.js; keep a local fallback so this page can
+    // never interpolate raw API text into innerHTML.
+    var esc = window.escapeHtml || function (s) {
+        return String(s === null || s === undefined ? "" : s)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    };
+
+    var OPENING_DISCOUNT = 0.05; // buyer opens 5% below market reference
+
+    var requirements = [];
+    var vendors = [];
+    var negotiations = [];
+    var current = null; // {negotiation: {...}, rounds: [...], po?: {...}}
+
+    function el(id) { return document.getElementById(id); }
+
+    // ------------------------------------------------------------ status pill
+
+    var STATUS_META = {
+        in_progress:      { text: "Status: In Progress",      color: "#1F2937", pulse: true },
+        pending_approval: { text: "Status: Pending Approval", color: "#fd761a", pulse: true },
+        accepted:         { text: "Status: Accepted",         color: "#16a34a", pulse: false },
+        stalled:          { text: "Status: Stalled",          color: "#ba1a1a", pulse: false },
+        declined:         { text: "Status: Declined",         color: "#ba1a1a", pulse: false }
+    };
+
+    function hexToRgba(hex, alpha) {
+        var r = parseInt(hex.slice(1, 3), 16);
+        var g = parseInt(hex.slice(3, 5), 16);
+        var b = parseInt(hex.slice(5, 7), 16);
+        return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
+    }
+
+    function setPill(status) {
+        var meta = STATUS_META[status] ||
+            { text: "Status: No Active Negotiation", color: "#75777c", pulse: false };
+        el("status-pill").style.backgroundColor = hexToRgba(meta.color, 0.08);
+        el("status-pill").style.borderColor = hexToRgba(meta.color, 0.25);
+        el("status-dot").style.backgroundColor = meta.color;
+        el("status-dot").classList.toggle("animate-pulse", meta.pulse);
+        el("status-text").style.color = meta.color;
+        el("status-text").textContent = meta.text;
+    }
+
+    // ------------------------------------------------------------ small utils
+
+    function initials(name) {
+        var parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+        var out = parts.slice(0, 2).map(function (w) { return w.charAt(0); }).join("");
+        return (out || "V").toUpperCase();
+    }
+
+    function fmtTime(ts) {
+        if (!ts) return "";
+        var d = new Date(ts);
+        if (isNaN(d.getTime())) return "";
+        return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function findVendor(id) {
+        var n = Number(id);
+        for (var i = 0; i < vendors.length; i++) {
+            if (vendors[i].id === n) return vendors[i];
+        }
+        return null;
+    }
+
+    function reqLabel(r) {
+        var parts = [];
+        if (r.quantity !== null && r.quantity !== undefined) parts.push(String(r.quantity));
+        if (r.unit) parts.push(r.unit);
+        parts.push(r.material || "");
+        if (r.grade) parts.push(r.grade);
+        return parts.join(" ").replace(/\s+/g, " ").trim();
+    }
+
+    function setOptions(select, items, placeholder) {
+        select.innerHTML = "";
+        if (placeholder) {
+            var ph = document.createElement("option");
+            ph.value = "";
+            ph.textContent = placeholder;
+            select.appendChild(ph);
+        }
+        items.forEach(function (it) {
+            var o = document.createElement("option");
+            o.value = String(it.value);
+            o.textContent = it.label; // textContent => safe
+            select.appendChild(o);
+        });
+    }
+
+    function setBusy(btn, busy, busyLabel) {
+        if (busy) {
+            btn.dataset.orig = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>' +
+                '<span class="font-label-caps text-label-caps">' + esc(busyLabel || "Working…") + "</span>";
+            btn.classList.add("opacity-80");
+        } else {
+            if (btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
+            btn.classList.remove("opacity-80");
+        }
+    }
+
+    // -------------------------------------------------------------- data load
+
+    function loadRequirements() {
+        return apiGet("/api/requirements?project_id=" + encodeURIComponent(getProjectId()))
+            .then(function (data) {
+                requirements = data.requirements || [];
+                if (!requirements.length) {
+                    setOptions(el("req-select"), [], "No requirements found — ingest a tender first");
+                    return;
+                }
+                setOptions(el("req-select"), requirements.map(function (r) {
+                    return { value: r.id, label: reqLabel(r) };
+                }));
+            })
+            .catch(function (err) {
+                requirements = [];
+                setOptions(el("req-select"), [], "Failed to load requirements");
+                toast(err.message, "error");
+            });
+    }
+
+    function loadVendors() {
+        return apiGet("/api/vendors")
+            .then(function (data) {
+                vendors = data.vendors || [];
+            })
+            .catch(function (err) {
+                vendors = [];
+                setOptions(el("vendor-select"), [], "Failed to load vendors");
+                toast(err.message, "error");
+            });
+    }
+
+    function loadNegotiations() {
+        return apiGet("/api/negotiations?project_id=" + encodeURIComponent(getProjectId()))
+            .then(function (data) {
+                negotiations = data.negotiations || [];
+                var keep = el("neg-select").value;
+                setOptions(el("neg-select"), negotiations.map(function (n) {
+                    return {
+                        value: n.id,
+                        label: (n.material || "Material") + " vs " + (n.vendor_name || "Vendor") +
+                            " — " + (n.status || "unknown")
+                    };
+                }), negotiations.length ? "— Select a negotiation —" : "No negotiations yet for this project");
+                if (keep) el("neg-select").value = keep;
+            })
+            .catch(function (err) {
+                negotiations = [];
+                setOptions(el("neg-select"), [], "Failed to load negotiations");
+                toast(err.message, "error");
+            });
+    }
+
+    // Vendors whose materials match the selected requirement come first; if
+    // nothing matches, show the full directory.
+    function refilterVendors() {
+        if (!vendors.length) return;
+        var keep = el("vendor-select").value;
+        var reqId = Number(el("req-select").value);
+        var req = null;
+        for (var i = 0; i < requirements.length; i++) {
+            if (requirements[i].id === reqId) req = requirements[i];
+        }
+        var list = vendors;
+        if (req && req.material) {
+            var mat = String(req.material).toLowerCase();
+            var matched = vendors.filter(function (v) {
+                return (v.materials_supplied || []).some(function (m) {
+                    var ml = String(m).toLowerCase();
+                    return ml.indexOf(mat) !== -1 || mat.indexOf(ml) !== -1;
+                });
+            });
+            if (matched.length) list = matched;
+        }
+        setOptions(el("vendor-select"), list.map(function (v) {
+            return { value: v.id, label: v.name };
+        }));
+        if (keep && list.some(function (v) { return String(v.id) === keep; })) {
+            el("vendor-select").value = keep;
+        }
+        renderVendorProfile(findVendor(el("vendor-select").value));
+    }
+
+    // --------------------------------------------------------- vendor profile
+
+    function renderVendorProfile(v) {
+        if (!v) {
+            el("vp-initials").textContent = "—";
+            el("vp-name").textContent = "No vendor selected";
+            el("vp-tier").textContent = "—";
+            el("vp-reliability").textContent = "—";
+            el("vp-rating").textContent = "—";
+            return;
+        }
+        el("vp-initials").textContent = initials(v.name);
+        el("vp-name").textContent = v.name || "—";
+        el("vp-tier").textContent = (typeof v.price_index === "number")
+            ? (v.price_index < 1 ? "Value supplier" : "Premium supplier")
+            : "—";
+        el("vp-reliability").textContent = (v.historical_on_time_pct !== null && v.historical_on_time_pct !== undefined)
+            ? v.historical_on_time_pct + "%" : "—";
+        el("vp-rating").textContent = (v.rating !== null && v.rating !== undefined)
+            ? Number(v.rating).toFixed(1) : "—";
+    }
+
+    // ------------------------------------------------------------- transcript
+
+    function buyerBubble(r) {
+        return '<div class="flex flex-col items-end gap-1">' +
+            '<div class="flex items-center gap-2 mb-1">' +
+            '<span class="font-label-caps text-[11px] text-on-surface-variant uppercase">Buyer (ConstructIQ)</span>' +
+            '<span class="text-[10px] text-on-surface-variant/60">' + esc(fmtTime(r.timestamp)) + "</span>" +
+            "</div>" +
+            '<div class="max-w-[80%] bg-primary text-white p-4 rounded-xl rounded-tr-none shadow-sm font-body-md leading-relaxed border border-primary">' +
+            "<p>" + esc(r.message) + "</p>" +
+            '<div class="mt-2 pt-2 border-t border-white/20 font-data-tabular text-data-tabular text-white/80">' +
+            fmtINR(r.offered_price) + "/unit</div>" +
+            "</div></div>";
+    }
+
+    function vendorBubble(r, neg, vendorName, isOffer) {
+        var header = '<div class="flex items-center gap-2 mb-1">' +
+            '<div class="w-6 h-6 bg-surface-container-highest rounded-full flex items-center justify-center border border-outline-variant">' +
+            '<span class="text-[10px] font-bold">' + esc(initials(vendorName)) + "</span></div>" +
+            '<span class="font-label-caps text-[11px] text-on-surface-variant uppercase">Vendor (' + esc(vendorName) + ")</span>" +
+            '<span class="text-[10px] text-on-surface-variant/60">' + esc(fmtTime(r.timestamp)) + "</span>" +
+            "</div>";
+        var body;
+        if (isOffer) {
+            var unitPrice = (neg.final_price !== null && neg.final_price !== undefined)
+                ? neg.final_price : r.offered_price;
+            var qty = neg.quantity;
+            var totalStr = (typeof unitPrice === "number" && typeof qty === "number")
+                ? fmtINR(unitPrice * qty) : "—";
+            var qtyLabel = esc(((qty !== null && qty !== undefined) ? qty : "—") + " " + (neg.unit || "unit"));
+            body = '<div class="max-w-[80%] bg-surface-container border-l-4 border-secondary text-on-surface p-5 rounded-xl rounded-tl-none shadow-md font-body-md leading-relaxed">' +
+                '<div class="mb-3 font-bold text-secondary flex items-center gap-2">' +
+                '<span class="material-symbols-outlined text-[20px]">verified</span>Counter-Offer Received</div>' +
+                '<p class="mb-2">' + esc(r.message) + "</p>" +
+                '<p class="mb-4 font-data-tabular text-data-tabular text-on-surface-variant">' + fmtINR(r.offered_price) + "/unit</p>" +
+                '<div class="bg-white/50 p-3 rounded border border-outline-variant/30 font-data-tabular text-data-tabular text-sm">' +
+                '<div class="flex justify-between mb-1"><span>Current Unit Price:</span><span class="font-bold">' + fmtINR(unitPrice) + "</span></div>" +
+                '<div class="flex justify-between border-t border-outline-variant/20 pt-1 mt-1"><span>Total Value (' + qtyLabel + '):</span><span class="font-bold">' + totalStr + "</span></div>" +
+                "</div></div>";
+        } else {
+            body = '<div class="max-w-[80%] bg-surface-container text-on-surface p-4 rounded-xl rounded-tl-none shadow-sm font-body-md leading-relaxed border border-outline-variant/50">' +
+                "<p>" + esc(r.message) + "</p>" +
+                '<div class="mt-2 pt-2 border-t border-outline-variant/40 font-data-tabular text-data-tabular text-on-surface-variant">' +
+                fmtINR(r.offered_price) + "/unit</div>" +
+                "</div>";
+        }
+        return '<div class="flex flex-col items-start gap-1">' + header + body + "</div>";
+    }
+
+    function renderTranscript(neg, rounds, vendorName) {
+        var box = el("chat-box");
+        if (!rounds.length) {
+            box.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-center gap-3 text-on-surface-variant">' +
+                '<span class="material-symbols-outlined text-[40px] opacity-40">forum</span>' +
+                '<p class="font-body-md">No rounds recorded yet for this negotiation.</p></div>';
+            return;
+        }
+        var lastVendorIdx = -1;
+        rounds.forEach(function (r, i) { if (r.actor === "vendor") lastVendorIdx = i; });
+        var html = '<div class="flex justify-center">' +
+            '<span class="px-3 py-1 bg-surface-container text-[11px] font-label-caps text-on-surface-variant rounded-full border border-outline-variant/30">Contract Parameters Established</span>' +
+            "</div>";
+        rounds.forEach(function (r, i) {
+            if (r.actor === "buyer") {
+                html += buyerBubble(r);
+            } else {
+                var isOffer = neg.status === "pending_approval" && i === lastVendorIdx;
+                html += vendorBubble(r, neg, vendorName, isOffer);
+            }
+        });
+        box.innerHTML = html;
+        box.scrollTop = box.scrollHeight;
+    }
+
+    // ------------------------------------------------------------ stat cards
+
+    var SUFFIX = ' <span class="text-body-md font-normal text-on-surface-variant">';
+
+    function renderCards(neg, rounds) {
+        var lastVendorOffer = null;
+        rounds.forEach(function (r) { if (r.actor === "vendor") lastVendorOffer = r.offered_price; });
+        var price = (neg.final_price !== null && neg.final_price !== undefined)
+            ? neg.final_price : lastVendorOffer;
+
+        var savingsHtml = "—" + SUFFIX + "vs opening ask</span>";
+        if (typeof price === "number" && typeof neg.vendor_asking_price === "number" &&
+            typeof neg.quantity === "number") {
+            savingsHtml = fmtINR((neg.vendor_asking_price - price) * neg.quantity) +
+                SUFFIX + "vs opening ask</span>";
+        }
+        el("card-savings").innerHTML = savingsHtml;
+
+        var vendor = findVendor(neg.vendor_id);
+        el("card-lead").innerHTML = (vendor && vendor.avg_delivery_days !== null && vendor.avg_delivery_days !== undefined)
+            ? esc(vendor.avg_delivery_days) + " Days" + SUFFIX + "Quoted lead time</span>"
+            : "—" + SUFFIX + "Quoted lead time</span>";
+
+        el("card-compliance").innerHTML = rounds.length + " rounds" + SUFFIX + "· formula-driven</span>";
+    }
+
+    // --------------------------------------------------------------- insight
+
+    function renderInsight(neg) {
+        var marketRef = neg.opening_offer / (1 - OPENING_DISCOUNT);
+        el("ai-insight").textContent = "AI Insight: Market-reference price " +
+            fmtINR(marketRef) + " (from internal quotes; derived client-side as opening offer ÷ 0.95). " +
+            "Opening offer " + fmtINR(neg.opening_offer) + " (5% below market). " +
+            "Risk-adjusted target " + fmtINR(neg.target_price) + ".";
+    }
+
+    // ---------------------------------------------------------- action state
+
+    function setAction(btn, enabled) {
+        btn.classList.toggle("action-blocked", !enabled);
+        btn.setAttribute("aria-disabled", enabled ? "false" : "true");
+    }
+
+    function actionBlockedReason(action) {
+        if (!current) return "Start or load a negotiation first.";
+        var s = current.negotiation.status;
+        if (action === "counter" && s !== "in_progress") {
+            return "Counter-offers can only be sent while the negotiation is in progress (current status: " + s + ").";
+        }
+        if (action === "approve" && s !== "pending_approval") {
+            return "Offers can only be approved when the negotiation is pending approval (current status: " + s + ").";
+        }
+        if (action === "decline" && (s === "accepted" || s === "declined")) {
+            return "This negotiation is already " + s + ".";
+        }
+        return null;
+    }
+
+    function syncActionButtons() {
+        var s = current ? current.negotiation.status : null;
+        setAction(el("btn-counter"), s === "in_progress");
+        setAction(el("btn-approve"), s === "pending_approval");
+        setAction(el("btn-decline"), !!s && s !== "accepted" && s !== "declined");
+    }
+
+    // ------------------------------------------------------------ renderState
+
+    function renderState(state) {
+        current = state;
+        var neg = state.negotiation;
+        var rounds = state.rounds || [];
+        var vendor = findVendor(neg.vendor_id);
+        var vendorName = neg.vendor_name || (vendor && vendor.name) || "Vendor";
+
+        setPill(neg.status);
+        el("neg-since").textContent = fmtDate(neg.created_date);
+        renderTranscript(neg, rounds, vendorName);
+        renderInsight(neg);
+        renderVendorProfile(vendor || { name: vendorName });
+        renderCards(neg, rounds);
+        syncActionButtons();
+        if (!state.po) el("po-banner").style.display = "none";
+    }
+
+    // ---------------------------------------------------------------- actions
+
+    function startNegotiation() {
+        var reqId = Number(el("req-select").value);
+        var vendorId = Number(el("vendor-select").value);
+        if (!reqId || !vendorId) {
+            toast("Select a requirement and a vendor before starting a negotiation.", "error");
+            return;
+        }
+        var btn = el("btn-start");
+        setBusy(btn, true, "Negotiating…");
+        apiPost("/api/negotiation/start", { requirement_id: reqId, vendor_id: vendorId })
+            .then(function (state) {
+                return apiPost("/api/negotiation/" + state.negotiation.id + "/run");
+            })
+            .then(function (state) {
+                renderState(state);
+                toast("Negotiation completed automated rounds — review the offer.", "success");
+                return loadNegotiations().then(function () {
+                    el("neg-select").value = String(state.negotiation.id);
+                });
+            })
+            .catch(function (err) { toast(err.message, "error"); })
+            .then(function () { setBusy(btn, false); });
+    }
+
+    function sendCounter() {
+        var reason = actionBlockedReason("counter");
+        if (reason) { toast(reason, "error"); return; }
+        var btn = el("btn-counter");
+        setBusy(btn, true, "Sending…");
+        apiPost("/api/negotiation/" + current.negotiation.id + "/round")
+            .then(function (state) {
+                renderState(state);
+                return loadNegotiations();
+            })
+            .catch(function (err) { toast(err.message, "error"); })
+            .then(function () { setBusy(btn, false); });
+    }
+
+    function approveOffer() {
+        var reason = actionBlockedReason("approve");
+        if (reason) { toast(reason, "error"); return; }
+        var btn = el("btn-approve");
+        setBusy(btn, true, "Processing…");
+        apiPost("/api/negotiation/" + current.negotiation.id + "/approve")
+            .then(function (state) {
+                renderState(state);
+                var po = state.po;
+                if (po && po.po_number) {
+                    toast("PO " + po.po_number + " generated", "success");
+                    el("po-banner-text").textContent = "PO " + po.po_number + " generated";
+                } else {
+                    toast("Offer approved — purchase order generated", "success");
+                    el("po-banner-text").textContent = "Offer approved — purchase order generated";
+                }
+                el("po-banner").style.display = "flex";
+                return loadNegotiations();
+            })
+            .catch(function (err) { toast(err.message, "error"); })
+            .then(function () { setBusy(btn, false); });
+    }
+
+    function declineOffer() {
+        var reason = actionBlockedReason("decline");
+        if (reason) { toast(reason, "error"); return; }
+        var btn = el("btn-decline");
+        setBusy(btn, true, "Declining…");
+        apiPost("/api/negotiation/" + current.negotiation.id + "/decline")
+            .then(function (state) {
+                renderState(state);
+                toast("Negotiation declined.", "info");
+                return loadNegotiations();
+            })
+            .catch(function (err) { toast(err.message, "error"); })
+            .then(function () { setBusy(btn, false); });
+    }
+
+    function loadExisting() {
+        var id = el("neg-select").value;
+        if (!id) return;
+        apiGet("/api/negotiation/" + encodeURIComponent(id))
+            .then(renderState)
+            .catch(function (err) { toast(err.message, "error"); });
+    }
+
+    // ------------------------------------------------------------------- init
+
+    wireNav("negotiation");
+    setPill(null);
+    syncActionButtons();
+
+    el("req-select").addEventListener("change", refilterVendors);
+    el("vendor-select").addEventListener("change", function () {
+        renderVendorProfile(findVendor(this.value));
+    });
+    el("neg-select").addEventListener("change", loadExisting);
+    el("btn-start").addEventListener("click", startNegotiation);
+    el("btn-counter").addEventListener("click", sendCounter);
+    el("btn-approve").addEventListener("click", approveOffer);
+    el("btn-decline").addEventListener("click", declineOffer);
+
+    Promise.all([loadRequirements(), loadVendors()]).then(refilterVendors);
+    loadNegotiations();
+})();
+</script>
+</body></html>

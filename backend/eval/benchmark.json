@@ -1,0 +1,20 @@
+[
+  {
+    "project_id": "PRJ-2024-001",
+    "question": "What grade of TMT steel does the tender require?",
+    "expected_answer_contains": ["Fe500D"],
+    "expected_source_page": 1
+  },
+  {
+    "project_id": "PRJ-2024-001",
+    "question": "What grade of cement is specified?",
+    "expected_answer_contains": ["OPC 53"],
+    "expected_source_page": 1
+  },
+  {
+    "project_id": "PRJ-2024-001",
+    "question": "What concrete mix grade is required for the structural work?",
+    "expected_answer_contains": ["M40"],
+    "expected_source_page": 1
+  }
+]

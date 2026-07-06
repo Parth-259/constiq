@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Risk Dashboard - ConstructIQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "on-error-container": "#93000a",
+                    "background": "#f8f9ff",
+                    "on-tertiary-fixed": "#191c1e",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#1f2937",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "primary": "#0a1422",
+                    "on-tertiary-container": "#8d9092",
+                    "on-surface-variant": "#44474c",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-container": "#fd761a",
+                    "on-background": "#0b1c30",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "on-surface": "#0b1c30",
+                    "surface-tint": "#555f6f",
+                    "primary-fixed-dim": "#bdc7d9",
+                    "tertiary-container": "#25292b",
+                    "tertiary-fixed": "#e0e3e5",
+                    "surface-dim": "#cbdbf5",
+                    "outline-variant": "#c5c6cc",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#ffdbca",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ffb690",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "inverse-primary": "#bdc7d9",
+                    "outline": "#75777c",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed": "#d9e3f6",
+                    "secondary": "#9d4300",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-container": "#8690a1",
+                    "tertiary": "#111416",
+                    "surface-container-high": "#dce9ff",
+                    "on-secondary-fixed-variant": "#783200",
+                    "surface-container-low": "#eff4ff",
+                    "on-secondary-container": "#5c2400",
+                    "on-primary-fixed": "#121c2a",
+                    "on-primary-fixed-variant": "#3d4756",
+                    "on-secondary-fixed": "#341100",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container": "#e5eeff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "20px",
+                    "lg": "24px",
+                    "sm": "12px",
+                    "margin": "24px",
+                    "base": "4px",
+                    "md": "16px",
+                    "xs": "8px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "data-tabular": ["JetBrains Mono"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { background-color: #f8fafc; }
+        .risk-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .risk-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant w-full">
+<div class="flex items-center justify-between px-6 py-3 w-full max-w-[1600px] mx-auto">
+<div class="flex items-center gap-x-8">
+<span class="font-headline-md text-headline-md font-bold text-secondary">ConstructIQ</span>
+<nav class="hidden md:flex items-center gap-x-6">
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="chat" href="chat.html">Chat</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="risk" href="risk.html">Risk Dashboard</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="vendors" href="vendors.html">Vendors</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="negotiation" href="negotiation.html">Negotiation</a>
+<a class="text-on-surface-variant pb-2 hover:bg-surface-container transition-colors font-label-caps text-label-caps" data-nav="po" href="purchase_orders.html">Purchase Orders</a>
+</nav>
+</div>
+<div class="flex items-center gap-x-4">
+<div class="relative w-64 mr-4">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-body-md focus:outline-none focus:ring-1 focus:ring-secondary" placeholder="Global Search" type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-2 rounded-full">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container p-2 rounded-full">help_outline</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior construction procurement manager with a clean-cut look, wearing a neutral-colored business casual shirt. The background is a soft-focus modern architectural office with industrial steel elements and blueprints visible on a wall. High-key natural lighting emphasizes precision and corporate authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFkPywpimDypgbjNGQaWT0gZTRzUh6EzoZDa0rnX5j2kcrKiFKik_79TNhqlvhqa_0GYmCkbtsKBPQgAmSSXTUMeamJR6JEMGjYL2wB1aeP0YVtEkPHdz3yNSQ48VCuHNVy9uvnnDHTejV6qvgiK1PO74WJFqPTfpksvDie7r0h2tiZIPZe-bO7Q6ODpbTwYE90Oa8xlpTyWRfDwZGPML-n3sjK-TA7BP_O93O2iCR0rgUYkj2nrJn"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-15 h-[calc(100vh-60px)] w-[280px] bg-primary text-on-primary flex flex-col py-6 gap-y-4 z-40">
+<div class="px-6 mb-4">
+<div class="flex items-center gap-x-3">
+<div class="w-10 h-10 bg-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">inventory</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-black leading-tight">Project Center</h3>
+<p class="text-[10px] uppercase tracking-widest opacity-70">Enterprise Procurement</p>
+</div>
+</div>
+</div>
+<nav class="flex-grow">
+<a class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 my-1 flex items-center px-4 py-3 active:scale-95 duration-75" href="risk.html">
+<span class="material-symbols-outlined mr-3">inventory</span>
+<span class="font-label-caps text-label-caps">Current Projects</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-all duration-200 mx-2 my-1 flex items-center px-4 py-3" href="chat.html">
+<span class="material-symbols-outlined mr-3">upload_file</span>
+<span class="font-label-caps text-label-caps">PDF Ingestion</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-all duration-200 mx-2 my-1 flex items-center px-4 py-3" href="chat.html">
+<span class="material-symbols-outlined mr-3">folder_shared</span>
+<span class="font-label-caps text-label-caps">Doc Library</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 transition-all duration-200 mx-2 my-1 flex items-center px-4 py-3" href="#">
+<span class="material-symbols-outlined mr-3">settings_applications</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2" onclick="location.href='chat.html'">
+<span class="material-symbols-outlined">add</span>
+                    New Procurement
+                </button>
+</div>
+<div class="mt-4 pt-4 border-t border-primary-container/50">
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-6 py-2 text-sm" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">analytics</span>
+                    System Health
+                </a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-6 py-2 text-sm" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">support_agent</span>
+                    Support
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] flex-grow p-lg">
+<div class="max-w-[1320px] mx-auto">
+<!-- Header Section -->
+<div class="flex items-end justify-between mb-xl">
+<div>
+<nav class="flex items-center gap-2 text-on-surface-variant font-label-caps text-[10px] mb-2">
+<span>PROJECTS</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span id="crumbProject">PRJ-2024-001</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-secondary">RISK ASSESSMENT</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight" id="pageTitle">Material Risk Assessment — Project PRJ-2024-001</h1>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-all font-bold group shadow-sm disabled:opacity-60 disabled:cursor-wait" id="refreshBtn">
+<span class="material-symbols-outlined group-active:rotate-180 transition-transform duration-500" id="refreshIcon">refresh</span>
+<span id="refreshLabel">Refresh Data</span>
+</button>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Top-3 risk cards render here (display:contents keeps them direct grid items) -->
+<div class="contents" id="riskCards"></div>
+<!-- Visual Context / Additional Information -->
+<div class="xl:col-span-2 bg-surface-container-low border border-outline-variant rounded-lg p-lg flex gap-lg overflow-hidden relative">
+<div class="flex-grow z-10">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-xs">Procurement AI Insight</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mb-lg" id="insightText">
+                                Analysing project risk profile…
+                            </p>
+<div class="flex gap-4">
+<div class="px-4 py-2 bg-white rounded border border-outline-variant">
+<div class="font-label-caps text-[10px] text-on-surface-variant">TOTAL RISK SCORE</div>
+<div class="font-headline-md text-error" id="totalRiskScore">…</div>
+</div>
+<div class="px-4 py-2 bg-white rounded border border-outline-variant">
+<div class="font-label-caps text-[10px] text-on-surface-variant">ACTIVE MITIGATIONS</div>
+<div class="font-headline-md text-secondary" id="activeMitigations">…</div>
+</div>
+</div>
+</div>
+<div class="hidden lg:block w-1/3 min-h-[200px] rounded-lg overflow-hidden border border-outline-variant relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-80" data-alt="A sophisticated data visualization showing a global supply chain map with interconnected glowing nodes. Some paths are highlighted in vibrant safety orange to indicate active shipments, while a red pulsating area near a major shipping port signifies a logistics bottleneck. The style is professional and industrial, using a clean technical aesthetic with thin lines and high-contrast slate-gray and orange color tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIcRiEHh8JIGsN1eiuiEPiPFe4Iwnk5nrERiKKdD8ANcKS0pDTChvxJokmJxuFGSA7XIhkwmgzKtMGqu0FbijaMLpdSnxwCwlXC2usx65WBOO5mhiQQSxRyNsipYVO8UX744HGkqCRdpGPLJWXSPPVGuN2d9irGvFaTkTn1h3rHtXrG7F6RkDYikiFqpLs-ATbY5ZyRjBdJKeM5L0jM5Hbb8fFvq-vQPxHYT2Oo6dr0LvpLOzuZfGH"/>
+</div>
+</div>
+<!-- Action Panel -->
+<div class="bg-primary text-on-primary rounded-lg p-lg flex flex-col justify-center items-center text-center">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-white">smart_toy</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-xs">Ask ConstructIQ AI</h4>
+<p class="font-body-md text-body-md opacity-80 mb-lg px-4">
+                            Need a breakdown of labor cost impact for the Steel delay?
+                        </p>
+<form class="w-full relative px-2" id="askForm">
+<input class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-secondary-container" id="askInput" placeholder="Type a message..." type="text"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-secondary-container" type="submit">send</button>
+</form>
+</div>
+</div>
+<!-- Detailed Data View -->
+<div class="mt-xl bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="px-lg py-md border-b border-outline-variant bg-surface-container-low flex items-center justify-between">
+<h3 class="font-label-caps text-label-caps text-primary">PROJECT PROCUREMENT LEDGER</h3>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">filter_list</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary">download</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr class="font-label-caps text-[11px] text-on-surface-variant border-b border-outline-variant">
+<th class="px-lg py-3">MATERIAL ID</th>
+<th class="px-lg py-3">DESCRIPTION</th>
+<th class="px-lg py-3">STATUS</th>
+<th class="px-lg py-3">ORDER VALUE</th>
+<th class="px-lg py-3">EST. DELIVERY</th>
+<th class="px-lg py-3 text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="font-data-tabular text-data-tabular" id="ledgerBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script src="js/api.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  wireNav("risk");
+
+  var projectId = getProjectId();
+  document.getElementById("crumbProject").textContent = projectId;
+  document.getElementById("pageTitle").textContent =
+    "Material Risk Assessment — Project " + projectId;
+
+  var cardsHost = document.getElementById("riskCards");
+  var ledgerBody = document.getElementById("ledgerBody");
+  var insightText = document.getElementById("insightText");
+  var totalScoreEl = document.getElementById("totalRiskScore");
+  var mitigationsEl = document.getElementById("activeMitigations");
+  var refreshBtn = document.getElementById("refreshBtn");
+  var refreshIcon = document.getElementById("refreshIcon");
+  var refreshLabel = document.getElementById("refreshLabel");
+
+  // ------------------------------------------------------ label style config
+
+  var LABEL_STYLES = {
+    HIGH: {
+      chipText: "HIGH RISK",
+      chip: "bg-error/10 text-error",
+      bar: "bg-error",
+      icon: "error",
+      iconCls: "text-error",
+      boxCls: "bg-error-container/20 border border-error/10",
+      boxIcon: "verified_user",
+      boxIconCls: "text-error",
+      boxTextCls: "text-on-error-container",
+      noteLabel: "Mitigation",
+      noteText: "Escalate — negotiate expedited delivery or line up an alternate vendor.",
+      tableChip: "bg-error/10 text-error",
+      tableText: "HIGH RISK"
+    },
+    MEDIUM: {
+      chipText: "MEDIUM RISK",
+      chip: "bg-secondary-container/10 text-secondary",
+      bar: "bg-secondary-container",
+      icon: "warning",
+      iconCls: "text-secondary",
+      boxCls: "bg-[#FFF7ED] border border-secondary/10",
+      boxIcon: "lightbulb",
+      boxIconCls: "text-secondary",
+      boxTextCls: "text-on-secondary-container",
+      noteLabel: "Recommendation",
+      noteText: "Lock in pricing now and keep vendor lead time under watch.",
+      tableChip: "bg-secondary/10 text-secondary",
+      tableText: "WATCH"
+    },
+    LOW: {
+      chipText: "LOW RISK",
+      chip: "bg-emerald-50 text-emerald-700",
+      bar: "bg-emerald-500",
+      icon: "check_circle",
+      iconCls: "text-emerald-500",
+      boxCls: "bg-emerald-50/50 border border-emerald-100",
+      boxIcon: "verified",
+      boxIconCls: "text-emerald-600",
+      boxTextCls: "text-emerald-800 italic",
+      noteLabel: "",
+      noteText: "No action needed.",
+      tableChip: "bg-emerald-500/10 text-emerald-600",
+      tableText: "ON TRACK"
+    },
+    NO_VENDOR: {
+      chipText: "NO VENDOR",
+      chip: "bg-slate-400/10 text-slate-600",
+      bar: "bg-slate-400",
+      icon: "person_search",
+      iconCls: "text-slate-500",
+      boxCls: "bg-slate-100 border border-slate-200",
+      boxIcon: "travel_explore",
+      boxIconCls: "text-slate-500",
+      boxTextCls: "text-slate-600",
+      noteLabel: "Action",
+      noteText: "Run vendor discovery to source this material.",
+      tableChip: "bg-on-surface-variant/10 text-on-surface-variant",
+      tableText: "NO VENDOR"
+    }
+  };
+
+  function labelStyle(label) {
+    return LABEL_STYLES[label] || LABEL_STYLES.NO_VENDOR;
+  }
+
+  function chatUrl(material) {
+    return (
+      "chat.html?q=" +
+      encodeURIComponent("What is the delay risk for " + material + "?")
+    );
+  }
+
+  function hasNumber(v) {
+    return typeof v === "number" && isFinite(v);
+  }
+
+  // ------------------------------------------------------------- skeleton
+
+  function renderSkeleton() {
+    var card =
+      '<div class="risk-card bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col animate-pulse">' +
+      '<div class="h-1 w-full bg-outline-variant"></div>' +
+      '<div class="p-lg flex flex-col h-full">' +
+      '<div class="h-6 w-2/3 bg-surface-container-high rounded mb-2"></div>' +
+      '<div class="h-4 w-24 bg-surface-container-high rounded-full mb-md"></div>' +
+      '<div class="h-20 w-full bg-surface-container rounded mb-xs"></div>' +
+      '<div class="h-14 w-full bg-surface-container rounded mb-xl"></div>' +
+      '<div class="h-8 w-full bg-surface-container rounded mt-auto"></div>' +
+      "</div></div>";
+    cardsHost.innerHTML = card + card + card;
+
+    insightText.innerHTML =
+      '<span class="inline-block h-4 w-full max-w-sm bg-surface-container-high rounded animate-pulse"></span>';
+    totalScoreEl.textContent = "…";
+    mitigationsEl.textContent = "…";
+
+    var row =
+      '<tr class="border-b border-outline-variant animate-pulse">' +
+      '<td class="px-lg py-4"><div class="h-3 w-16 bg-surface-container-high rounded"></div></td>' +
+      '<td class="px-lg py-4"><div class="h-3 w-48 bg-surface-container-high rounded"></div></td>' +
+      '<td class="px-lg py-4"><div class="h-4 w-20 bg-surface-container-high rounded"></div></td>' +
+      '<td class="px-lg py-4"><div class="h-3 w-24 bg-surface-container-high rounded"></div></td>' +
+      '<td class="px-lg py-4"><div class="h-3 w-24 bg-surface-container-high rounded"></div></td>' +
+      '<td class="px-lg py-4 text-right"><div class="h-3 w-6 bg-surface-container-high rounded ml-auto"></div></td>' +
+      "</tr>";
+    ledgerBody.innerHTML = row + row + row + row;
+  }
+
+  // ------------------------------------------------------------- error state
+
+  function renderError(message) {
+    cardsHost.innerHTML =
+      '<div class="col-span-full bg-error-container/20 border border-error/20 rounded-lg p-lg flex items-center gap-4">' +
+      '<span class="material-symbols-outlined text-error">error</span>' +
+      '<div class="flex-grow text-left">' +
+      '<p class="font-body-lg text-body-lg font-bold text-on-surface">Could not load risk data</p>' +
+      '<p class="font-body-md text-body-md text-on-surface-variant">' +
+      escapeHtml(message) +
+      "</p></div>" +
+      '<button class="px-6 py-2.5 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 shrink-0" id="retryBtn">Retry</button>' +
+      "</div>";
+    document.getElementById("retryBtn").addEventListener("click", load);
+
+    insightText.textContent =
+      "Risk data unavailable — use Retry to regenerate the AI insight.";
+    totalScoreEl.textContent = "—";
+    mitigationsEl.textContent = "—";
+    ledgerBody.innerHTML =
+      '<tr><td class="px-lg py-8 text-center text-on-surface-variant" colspan="6">Failed to load the procurement ledger — use the Retry button above.</td></tr>';
+  }
+
+  // ------------------------------------------------------------- risk cards
+
+  function cardHtml(c) {
+    var st = labelStyle(c.label);
+    var req = c.requirement || {};
+    var material = req.material || "Unknown material";
+    var title =
+      escapeHtml(material) + (req.grade ? " — " + escapeHtml(req.grade) : "");
+    var vendorName = c.vendor && c.vendor.name ? c.vendor.name : "—";
+    var score = hasNumber(c.score) ? Math.round(c.score) : 0;
+
+    var noteHtml =
+      (st.noteLabel
+        ? '<span class="font-bold">' + st.noteLabel + ":</span> "
+        : "") +
+      escapeHtml(st.noteText) +
+      ' <span class="opacity-70">(risk score ' + score + "/100)</span>";
+
+    var valueHtml = hasNumber(c.est_value)
+      ? '<div class="flex flex-col items-end">' +
+        '<span class="font-label-caps text-[10px] text-on-surface-variant">EST. VALUE</span>' +
+        '<span class="font-data-tabular text-data-tabular">' +
+        escapeHtml(fmtINR(c.est_value)) +
+        "</span></div>"
+      : '<a class="text-secondary font-bold text-sm hover:underline" href="' +
+        chatUrl(material) +
+        '">Ask AI</a>';
+
+    return (
+      '<div class="risk-card bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col relative group">' +
+      '<div class="h-1 w-full ' + st.bar + '"></div>' +
+      '<div class="p-lg flex flex-col h-full">' +
+      '<div class="flex justify-between items-start mb-md">' +
+      "<div>" +
+      '<h2 class="font-headline-sm text-headline-sm text-primary mb-1">' + title + "</h2>" +
+      '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold ' +
+      st.chip + ' uppercase tracking-wider">' + st.chipText + "</span>" +
+      "</div>" +
+      '<span class="material-symbols-outlined ' + st.iconCls +
+      ' opacity-40 group-hover:opacity-100 transition-opacity">' + st.icon + "</span>" +
+      "</div>" +
+      '<div class="flex-grow mb-xl">' +
+      '<p class="font-body-lg text-body-lg text-on-surface mb-xs">' +
+      escapeHtml(c.explanation || "No risk explanation available.") +
+      "</p>" +
+      '<div class="' + st.boxCls + ' p-md rounded">' +
+      '<div class="flex gap-2 items-start">' +
+      '<span class="material-symbols-outlined ' + st.boxIconCls + ' text-md mt-0.5">' +
+      st.boxIcon + "</span>" +
+      '<p class="font-body-md text-body-md ' + st.boxTextCls + '">' + noteHtml + "</p>" +
+      "</div></div></div>" +
+      '<div class="flex items-center justify-between mt-auto pt-md border-t border-outline-variant">' +
+      '<div class="flex flex-col">' +
+      '<span class="font-label-caps text-[10px] text-on-surface-variant">VENDOR</span>' +
+      '<span class="font-data-tabular text-data-tabular">' + escapeHtml(vendorName) + "</span>" +
+      "</div>" +
+      valueHtml +
+      "</div></div></div>"
+    );
+  }
+
+  function emptyCardHtml(anyCards) {
+    return (
+      '<div class="risk-card bg-surface-container-lowest border border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center text-center p-lg min-h-[280px]">' +
+      '<span class="material-symbols-outlined text-on-surface-variant text-[40px] mb-md">inventory_2</span>' +
+      '<h2 class="font-headline-sm text-headline-sm text-primary mb-1">' +
+      (anyCards ? "No further requirements" : "No requirements yet") +
+      "</h2>" +
+      '<p class="font-body-md text-body-md text-on-surface-variant max-w-[240px]">' +
+      "Ingest a tender document for project " + escapeHtml(projectId) +
+      " to add material requirements to this risk assessment.</p>" +
+      "</div>"
+    );
+  }
+
+  function renderCards(cards) {
+    var sorted = cards.slice().sort(function (a, b) {
+      return (hasNumber(b.score) ? b.score : 0) - (hasNumber(a.score) ? a.score : 0);
+    });
+    var top = sorted.slice(0, 3);
+    var html = top.map(cardHtml).join("");
+    if (cards.length < 3) html += emptyCardHtml(cards.length > 0);
+    cardsHost.innerHTML = html;
+  }
+
+  // ------------------------------------------------------------- AI insight
+
+  function renderInsight(data) {
+    var cards = data.cards || [];
+    var total = hasNumber(data.total_risk_score) ? Math.round(data.total_risk_score) : 0;
+    var mitigations = hasNumber(data.active_mitigations) ? data.active_mitigations : 0;
+
+    totalScoreEl.textContent = total + "/100";
+    mitigationsEl.textContent = String(mitigations).padStart(2, "0");
+
+    if (!cards.length) {
+      insightText.textContent =
+        "No material requirements found for project " + projectId +
+        " — ingest a tender document to generate a procurement risk profile.";
+      return;
+    }
+
+    var scored = cards.filter(function (c) { return c.label !== "NO_VENDOR"; });
+    var pool = scored.length ? scored : cards;
+    var top = pool.slice().sort(function (a, b) {
+      return (hasNumber(b.score) ? b.score : 0) - (hasNumber(a.score) ? a.score : 0);
+    })[0];
+
+    var req = top.requirement || {};
+    var material = req.material || "An unnamed material";
+    var highCount = cards.filter(function (c) { return c.label === "HIGH"; }).length;
+    var factors = top.factors || {};
+
+    var s =
+      material + " carries the highest risk on this project (score " +
+      (hasNumber(top.score) ? Math.round(top.score) : 0) + "/100, " +
+      labelStyle(top.label).chipText + ").";
+
+    if (top.vendor && top.vendor.name) {
+      s += " Vendor " + top.vendor.name;
+      if (hasNumber(top.vendor.avg_delivery_days)) {
+        s += " averages " + top.vendor.avg_delivery_days + "-day delivery";
+      }
+      if (req.deadline) {
+        s += " against the " + fmtDate(req.deadline) + " deadline";
+      }
+      if (hasNumber(factors.lead_time_pressure)) {
+        s += " (lead-time pressure " + factors.lead_time_pressure.toFixed(2) + ")";
+      }
+      s += ".";
+    } else {
+      s += " No vendor is currently matched to this requirement.";
+    }
+
+    s +=
+      " " + highCount + " of " + cards.length + " requirement" +
+      (cards.length === 1 ? "" : "s") + " " + (highCount === 1 ? "is" : "are") +
+      " currently rated HIGH risk.";
+
+    insightText.textContent = s;
+  }
+
+  // ------------------------------------------------------------- ledger
+
+  function ledgerRowHtml(c, isLast) {
+    var st = labelStyle(c.label);
+    var req = c.requirement || {};
+    var material = req.material || "Unknown material";
+    var desc =
+      material + " — " +
+      (req.grade ? req.grade + " " : "") +
+      (req.quantity !== null && req.quantity !== undefined ? req.quantity : "") +
+      (req.unit || "");
+    var reqId = req.id !== null && req.id !== undefined ? req.id : "?";
+
+    return (
+      '<tr class="' + (isLast ? "" : "border-b border-outline-variant ") +
+      'hover:bg-surface-container/30 transition-colors">' +
+      '<td class="px-lg py-4">REQ-' + escapeHtml(reqId) + "</td>" +
+      '<td class="px-lg py-4 text-on-surface">' + escapeHtml(desc) + "</td>" +
+      '<td class="px-lg py-4"><span class="px-2 py-0.5 ' + st.tableChip + ' rounded">' +
+      st.tableText + "</span></td>" +
+      '<td class="px-lg py-4">' +
+      escapeHtml(hasNumber(c.est_value) ? fmtINR(c.est_value) : "—") + "</td>" +
+      '<td class="px-lg py-4">' +
+      escapeHtml(c.est_delivery ? fmtDate(c.est_delivery) : "—") + "</td>" +
+      '<td class="px-lg py-4 text-right">' +
+      '<a class="text-secondary font-bold material-symbols-outlined" href="' +
+      chatUrl(material) + '" title="Ask ConstructIQ AI about this item">more_horiz</a>' +
+      "</td></tr>"
+    );
+  }
+
+  function renderLedger(cards) {
+    if (!cards.length) {
+      ledgerBody.innerHTML =
+        '<tr><td class="px-lg py-8 text-center text-on-surface-variant" colspan="6">No requirements found for project ' +
+        escapeHtml(projectId) +
+        " — ingest a tender document to populate the ledger.</td></tr>";
+      return;
+    }
+    ledgerBody.innerHTML = cards
+      .map(function (c, i) {
+        return ledgerRowHtml(c, i === cards.length - 1);
+      })
+      .join("");
+  }
+
+  // ------------------------------------------------------------- load cycle
+
+  var loading = false;
+
+  function setRefreshing(on) {
+    refreshBtn.disabled = on;
+    refreshLabel.textContent = on ? "Refreshing…" : "Refresh Data";
+    if (on) refreshIcon.classList.add("animate-spin");
+    else refreshIcon.classList.remove("animate-spin");
+  }
+
+  function load() {
+    if (loading) return;
+    loading = true;
+    setRefreshing(true);
+    renderSkeleton();
+
+    apiGet("/api/risk/" + encodeURIComponent(projectId))
+      .then(function (data) {
+        var cards = (data && data.cards) || [];
+        renderCards(cards);
+        renderInsight(data || {});
+        renderLedger(cards);
+      })
+      .catch(function (err) {
+        toast(err.message, "error");
+        renderError(err.message);
+      })
+      .finally(function () {
+        loading = false;
+        setRefreshing(false);
+      });
+  }
+
+  refreshBtn.addEventListener("click", load);
+
+  document.getElementById("askForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var q = document.getElementById("askInput").value.trim();
+    if (!q) {
+      toast("Type a question for ConstructIQ AI first.", "info");
+      return;
+    }
+    location.href = "chat.html?q=" + encodeURIComponent(q);
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

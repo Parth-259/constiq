@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ConstructIQ | Chat Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled { font-variation-settings: 'FILL' 1; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Animation for thought process */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow { animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1f2937",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "primary": "#0a1422",
+                        "on-tertiary-container": "#8d9092",
+                        "on-surface-variant": "#44474c",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#fd761a",
+                        "on-background": "#0b1c30",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-surface": "#0b1c30",
+                        "surface-tint": "#555f6f",
+                        "primary-fixed-dim": "#bdc7d9",
+                        "tertiary-container": "#25292b",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c5c6cc",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "inverse-primary": "#bdc7d9",
+                        "outline": "#75777c",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#d9e3f6",
+                        "secondary": "#9d4300",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#8690a1",
+                        "tertiary": "#111416",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c2400",
+                        "on-primary-fixed": "#121c2a",
+                        "on-primary-fixed-variant": "#3d4756",
+                        "on-secondary-fixed": "#341100",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container": "#e5eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-tabular": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Side Navigation Bar -->
+<aside class="hidden md:flex flex-col h-screen py-6 gap-y-4 bg-primary w-[280px] fixed left-0 top-0 border-r border-outline/20">
+<div class="px-6 mb-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-on-secondary-container filled" style="font-size: 20px;">construction</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-black text-on-primary">ConstructIQ</div>
+<div class="font-label-caps text-[10px] text-on-primary-container uppercase tracking-widest">Enterprise Procurement</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 my-1 flex items-center px-4 py-3 hover:bg-secondary-container/90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3 filled">inventory</span>
+<span class="font-label-caps text-label-caps uppercase">Current Projects</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="#" id="side-ingest-link">
+<span class="material-symbols-outlined mr-3">upload_file</span>
+<span class="font-label-caps text-label-caps uppercase">PDF Ingestion</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span>
+<span class="font-label-caps text-label-caps uppercase">Doc Library</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings_applications</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto pt-6 border-t border-outline/10">
+<div class="bg-primary-container p-4 rounded-lg border border-outline/20">
+<div class="text-on-primary text-xs font-bold mb-2">PROJECT ID</div>
+<input class="w-full bg-primary border-outline/30 text-on-primary font-data-tabular text-sm rounded px-3 py-2 focus:ring-secondary-container focus:border-secondary-container" id="project-id-input" type="text" value="PRJ-2024-001"/>
+<div class="mt-4">
+<div class="text-on-primary text-xs font-bold mb-2 uppercase">PDF Ingestion</div>
+<select class="w-full mb-2 bg-primary border-outline/30 text-on-primary font-data-tabular text-xs rounded px-2 py-1.5 focus:ring-secondary-container focus:border-secondary-container" id="source-type-select">
+<option value="tender">Tender</option>
+<option value="meeting_notes">Meeting Notes</option>
+<option value="inspection_report">Inspection Report</option>
+<option value="change_request">Change Request</option>
+</select>
+<div class="border-2 border-dashed border-outline/30 rounded-lg p-4 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-secondary-container transition-colors" id="dropzone">
+<span class="material-symbols-outlined text-on-primary-container group-hover:text-secondary-container transition-colors">cloud_upload</span>
+<div class="text-[10px] text-on-primary-container mt-2">Drag &amp; drop spec files<br/>(PDF · DOCX · TXT)</div>
+</div>
+<input accept=".pdf,.docx,.txt" class="hidden" id="file-input" type="file"/>
+<!-- Ingestion status (progress / success / error) -->
+<div class="mt-3 bg-primary/50 rounded p-2 hidden" id="ingest-status"></div>
+</div>
+</div>
+</div>
+<div class="px-2 pb-2 mt-4">
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">analytics</span>
+<span class="font-label-caps text-[11px] uppercase">System Health</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">support_agent</span>
+<span class="font-label-caps text-[11px] uppercase">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-[280px] flex flex-col bg-background relative h-screen">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-6 py-3 w-full bg-surface border-b border-outline-variant z-10">
+<div class="flex items-center gap-8">
+<div class="md:hidden font-headline-md text-headline-md font-bold text-secondary">ConstructIQ</div>
+<!-- Toggle 'Quick Answer' vs 'Full Agent' -->
+<div class="flex bg-surface-container-low p-1 rounded-lg border border-outline-variant">
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all bg-white shadow-sm text-primary" id="mode-quick" onclick="switchMode('quick')">
+                            Quick Answer
+                        </button>
+<button class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all text-on-surface-variant hover:bg-surface-container" id="mode-full" onclick="switchMode('full')">
+                            Full Agent
+                        </button>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-secondary border-b-2 border-secondary font-bold pb-2 font-label-caps text-label-caps uppercase" data-nav="chat" href="chat.html">Chat</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2 font-label-caps text-label-caps uppercase" data-nav="risk" href="risk.html">Risk Dashboard</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2 font-label-caps text-label-caps uppercase" data-nav="vendors" href="vendors.html">Vendors</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2 font-label-caps text-label-caps uppercase" data-nav="negotiation" href="negotiation.html">Negotiation</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2 font-label-caps text-label-caps uppercase" data-nav="po" href="purchase_orders.html">Purchase Orders</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-dim border border-outline overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
+</div>
+</div>
+</header>
+<!-- Chat Message Area -->
+<div class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 max-w-[1200px] mx-auto w-full" id="chat-container">
+<!-- Welcome AI Message -->
+<div class="flex gap-4 max-w-[85%]">
+<div class="flex-shrink-0 w-8 h-8 bg-secondary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[18px] filled">smart_toy</span>
+</div>
+<div class="flex-1 space-y-3">
+<div class="bg-white border border-outline-variant p-5 rounded-tr-xl rounded-br-xl rounded-bl-xl shadow-sm text-on-surface leading-relaxed">
+                            Welcome back. Ask me about tender requirements, vendor risk, compliance or pricing for the active project — or switch to <span class="font-bold">Full Agent</span> mode to let me run discovery, evaluation and negotiation tools end-to-end.
+                        </div>
+<div class="text-[11px] font-label-caps text-outline uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">history</span> Just now
+                        </div>
+</div>
+</div>
+<!-- Empty state (shown when project has no documents) -->
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-10 flex flex-col items-center justify-center text-center hidden" id="thread-empty">
+<span class="material-symbols-outlined text-outline" style="font-size: 36px;">upload_file</span>
+<div class="mt-3 font-headline-sm text-headline-sm text-primary">Upload a tender to get started</div>
+<div class="mt-1 text-xs text-on-surface-variant">Drop a PDF, DOCX or TXT into the ingestion panel on the left to index it for this project.</div>
+</div>
+</div>
+<!-- Message Input Footer -->
+<footer class="p-6 bg-surface border-t border-outline-variant max-w-[1200px] mx-auto w-full">
+<div class="relative group">
+<div class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-secondary hover:bg-secondary/10 rounded-lg transition-all" id="attach-btn" title="Upload a document">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<input class="w-full bg-white border-outline-variant border py-4 pl-14 pr-32 rounded-xl focus:ring-2 focus:ring-secondary focus:border-secondary shadow-sm text-body-lg font-body-lg placeholder:text-outline disabled:opacity-60" id="composer-input" placeholder="Ask about specs, risks, or vendor comparisons..." type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+<button class="flex items-center gap-2 bg-secondary text-white px-5 py-2 rounded-lg font-bold hover:bg-secondary/90 active:scale-95 transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed" id="send-btn">
+<span>Analyze</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+<div class="mt-3 flex items-center justify-between px-2">
+<div class="flex items-center gap-4">
+<span class="text-[11px] text-outline flex items-center gap-1 font-label-caps uppercase">
+<span class="material-symbols-outlined text-[14px]">memory</span>
+                            Model: Claude Sonnet
+                        </span>
+<span class="text-[11px] text-outline flex items-center gap-1 font-label-caps uppercase">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+                            Docs Loaded: <span id="docs-loaded">0</span>
+</span>
+</div>
+<div class="text-[11px] text-outline font-label-caps uppercase">
+                        Enterprise Grade Privacy Enabled
+                    </div>
+</div>
+</footer>
+</main>
+<!-- Right Side AI Assistant Tool Panel (Fixed Hybrid Model) -->
+<div class="hidden xl:block w-[360px] bg-white border-l border-outline-variant h-screen overflow-y-auto" id="ai-panel">
+<div class="p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-sm text-headline-sm text-primary">Context Panel</h3>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary">close</span>
+</div>
+<div class="space-y-6">
+<!-- Project Risk Card -->
+<div class="p-4 border-t-2 border-secondary bg-surface-container-low rounded shadow-sm hidden" id="risk-card">
+<div class="text-xs font-bold text-outline uppercase mb-1">Procurement Risk</div>
+<div class="text-2xl font-bold text-secondary mb-3" id="risk-label">—</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Total Risk Score</span>
+<span class="font-data-tabular font-bold" id="risk-score">–</span>
+</div>
+<div class="w-full bg-outline-variant h-1.5 rounded-full">
+<div class="bg-secondary h-full rounded-full transition-all duration-500" id="risk-bar" style="width: 0%"></div>
+</div>
+</div>
+</div>
+<!-- Suggested Inquiries -->
+<div>
+<div class="text-xs font-bold text-outline uppercase mb-3">Suggested Inquiries</div>
+<div class="space-y-2" id="suggested-inquiries">
+<button class="w-full text-left p-3 text-xs bg-white border border-outline-variant rounded hover:border-secondary hover:bg-surface-container transition-colors" data-q="Which vendors can supply Fe500D TMT steel and what is the delivery risk?">
+                                "Which vendors can supply Fe500D TMT steel and what is the delivery risk?"
+                            </button>
+<button class="w-full text-left p-3 text-xs bg-white border border-outline-variant rounded hover:border-secondary hover:bg-surface-container transition-colors" data-q="What material requirements and deadlines were extracted from the tender?">
+                                "What material requirements and deadlines were extracted from the tender?"
+                            </button>
+<button class="w-full text-left p-3 text-xs bg-white border border-outline-variant rounded hover:border-secondary hover:bg-surface-container transition-colors" data-q="Compare quoted prices for M40 ready-mix concrete against the market reference price.">
+                                "Compare quoted prices for M40 ready-mix concrete against the market reference price."
+                            </button>
+</div>
+</div>
+<!-- Referenced Files List -->
+<div>
+<div class="text-xs font-bold text-outline uppercase mb-3">Active Data Sources</div>
+<div class="space-y-3" id="doc-list">
+<div class="text-xs text-outline p-2">Loading documents…</div>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant text-[11px] font-label-caps text-outline uppercase tracking-widest">
+                            Docs Loaded: <span id="panel-docs-loaded">0</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="js/api.js"></script>
+<script>
+        // ---------- helpers ----------
+        function escapeHtml(s) {
+            return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+                return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+            });
+        }
+        function $(id) { return document.getElementById(id); }
+
+        var chatContainer = $("chat-container");
+        var composerInput = $("composer-input");
+        var sendBtn = $("send-btn");
+        var mode = "quick";
+        var busy = false;
+
+        var SOURCE_TYPES = {
+            tender: { label: "Tender", icon: "picture_as_pdf" },
+            meeting_notes: { label: "Meeting Notes", icon: "groups" },
+            inspection_report: { label: "Inspection Report", icon: "fact_check" },
+            change_request: { label: "Change Request", icon: "published_with_changes" }
+        };
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // ---------- mode toggle ----------
+        function switchMode(m) {
+            mode = m;
+            var quickBtn = $("mode-quick");
+            var fullBtn = $("mode-full");
+            var active = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all bg-white shadow-sm text-primary";
+            var idle = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all text-on-surface-variant hover:bg-surface-container";
+            quickBtn.className = m === "quick" ? active : idle;
+            fullBtn.className = m === "full" ? active : idle;
+        }
+
+        function toggleThoughts(btn) {
+            var content = btn.nextElementSibling;
+            var icon = btn.querySelector("span:last-child");
+            content.classList.toggle("hidden");
+            icon.classList.toggle("rotate-180");
+        }
+
+        // ---------- message rendering ----------
+        function aiRow(innerHtml) {
+            var wrap = document.createElement("div");
+            wrap.className = "flex gap-4 max-w-[85%]";
+            wrap.innerHTML =
+                '<div class="flex-shrink-0 w-8 h-8 bg-secondary rounded-lg flex items-center justify-center text-white">' +
+                '<span class="material-symbols-outlined text-[18px] filled">smart_toy</span></div>' +
+                '<div class="flex-1 space-y-3 min-w-0">' + innerHtml + "</div>";
+            chatContainer.appendChild(wrap);
+            scrollToBottom();
+            return wrap;
+        }
+
+        function addUserBubble(text) {
+            var wrap = document.createElement("div");
+            wrap.className = "flex gap-4 max-w-[85%] ml-auto flex-row-reverse";
+            wrap.innerHTML =
+                '<div class="flex-shrink-0 w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">' +
+                '<span class="material-symbols-outlined text-[18px] filled">person</span></div>' +
+                '<div class="flex-1 space-y-3 text-right min-w-0">' +
+                '<div class="bg-primary text-white p-5 rounded-tl-xl rounded-br-xl rounded-bl-xl shadow-md leading-relaxed text-left inline-block">' +
+                escapeHtml(text) + "</div></div>";
+            chatContainer.appendChild(wrap);
+            scrollToBottom();
+        }
+
+        function addThinking(label) {
+            return aiRow(
+                '<div class="bg-white border border-outline-variant p-5 rounded-tr-xl rounded-br-xl rounded-bl-xl shadow-sm text-on-surface-variant flex items-center gap-3">' +
+                '<span class="material-symbols-outlined text-secondary text-[18px] animate-spin">sync</span>' +
+                '<span class="animate-pulse-slow">' + escapeHtml(label) + "</span></div>"
+            );
+        }
+
+        function timestampLine() {
+            return '<div class="text-[11px] font-label-caps text-outline uppercase tracking-wider flex items-center gap-2">' +
+                '<span class="material-symbols-outlined text-[14px]">done_all</span> Just now</div>';
+        }
+
+        function answerCardHtml(answerText, extraHtml) {
+            return '<div class="bg-white border-2 border-secondary/20 p-5 rounded-tr-xl rounded-br-xl rounded-bl-xl shadow-sm relative overflow-hidden">' +
+                '<div class="absolute left-0 top-0 w-1 h-full bg-secondary"></div>' +
+                '<div class="text-on-surface leading-relaxed whitespace-pre-wrap">' + escapeHtml(answerText) + "</div>" +
+                (extraHtml || "") + "</div>";
+        }
+
+        function addQuickAnswer(data) {
+            var extra = "";
+            var sources = data.sources || [];
+            if (sources.length) {
+                extra += '<div class="mt-4 pt-4 border-t border-outline-variant/30 flex flex-wrap gap-2">';
+                sources.forEach(function (s) {
+                    extra += '<span class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-low text-on-surface-variant rounded border border-outline-variant text-[11px] font-medium">' +
+                        '<span class="material-symbols-outlined text-[14px]">description</span>' +
+                        "Source: " + escapeHtml(s.source_file) + ", Page " + escapeHtml(s.page_number) + "</span>";
+                });
+                extra += "</div>";
+            }
+            if (data.low_confidence) {
+                extra += '<div class="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-amber-600">' +
+                    '<span class="material-symbols-outlined text-[14px]">warning</span>' +
+                    "Low retrieval confidence — verify this against the source documents.</div>";
+            }
+            aiRow(answerCardHtml(data.answer || "No answer returned.", extra) + timestampLine());
+        }
+
+        function addAgentAnswer(data) {
+            var html = "";
+            var calls = data.tool_calls || [];
+            if (calls.length) {
+                var lines = "";
+                calls.forEach(function (c, i) {
+                    lines += '<div class="flex items-start gap-2">' +
+                        '<span class="text-secondary font-bold">' + (i + 1) + ".</span>" +
+                        "<span>" + escapeHtml(c.tool) + " — " + escapeHtml(c.output_summary) + "</span></div>";
+                });
+                html += '<div class="bg-surface-container-low border border-outline-variant/50 rounded-lg overflow-hidden transition-all duration-300">' +
+                    '<button class="w-full flex items-center justify-between px-4 py-2 hover:bg-surface-container transition-colors text-on-surface-variant font-label-caps text-[11px] uppercase tracking-widest" onclick="toggleThoughts(this)">' +
+                    '<span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">psychology</span>' +
+                    "Agent Thought Process (" + calls.length + " tool calls)</span>" +
+                    '<span class="material-symbols-outlined text-sm transition-transform rotate-180">expand_more</span></button>' +
+                    '<div class="px-4 py-3 space-y-2 border-t border-outline-variant/30 font-data-tabular text-[12px] text-on-surface-variant">' +
+                    lines + "</div></div>";
+            }
+            html += answerCardHtml(data.answer || "No answer returned.", "") + timestampLine();
+            aiRow(html);
+        }
+
+        function addErrorCard(message) {
+            aiRow(
+                '<div class="bg-error-container/50 border border-error/30 p-4 rounded-tr-xl rounded-br-xl rounded-bl-xl text-on-error-container text-sm flex items-start gap-2">' +
+                '<span class="material-symbols-outlined text-error text-[18px]">error</span>' +
+                "<span>" + escapeHtml(message) + "</span></div>"
+            );
+        }
+
+        // ---------- composer ----------
+        function setBusy(state) {
+            busy = state;
+            composerInput.disabled = state;
+            sendBtn.disabled = state;
+        }
+
+        async function sendQuestion() {
+            if (busy) return;
+            var question = composerInput.value.trim();
+            if (!question) return;
+            addUserBubble(question);
+            composerInput.value = "";
+            var thinking = addThinking(mode === "quick" ? "Analyzing project documents…" : "Agent running procurement tools…");
+            setBusy(true);
+            try {
+                var body = { project_id: getProjectId(), question: question };
+                if (mode === "quick") {
+                    var data = await apiPost("/api/ask", body);
+                    thinking.remove();
+                    addQuickAnswer(data);
+                } else {
+                    var agentData = await apiPost("/api/agent/ask", body);
+                    thinking.remove();
+                    addAgentAnswer(agentData);
+                }
+            } catch (err) {
+                thinking.remove();
+                addErrorCard(err.message);
+                toast(err.message, "error");
+            } finally {
+                setBusy(false);
+                composerInput.focus();
+            }
+        }
+
+        sendBtn.addEventListener("click", sendQuestion);
+        composerInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendQuestion();
+            }
+        });
+
+        // ---------- ingestion (dropzone) ----------
+        var dropzone = $("dropzone");
+        var fileInput = $("file-input");
+        var ingestStatus = $("ingest-status");
+        var uploading = false;
+
+        function showIngestStatus(html) {
+            ingestStatus.innerHTML = html;
+            ingestStatus.classList.remove("hidden");
+        }
+
+        async function ingestFile(file) {
+            if (!file || uploading) return;
+            var ext = (file.name.split(".").pop() || "").toLowerCase();
+            if (["pdf", "docx", "txt"].indexOf(ext) === -1) {
+                toast("Unsupported file type — use PDF, DOCX or TXT", "error");
+                return;
+            }
+            uploading = true;
+            showIngestStatus(
+                '<div class="flex items-center gap-3">' +
+                '<div class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></div>' +
+                '<div class="flex-1 min-w-0">' +
+                '<div class="text-[10px] text-on-primary truncate">Ingesting ' + escapeHtml(file.name) + "…</div>" +
+                '<div class="w-full bg-outline/20 h-1 rounded-full mt-1 overflow-hidden">' +
+                '<div class="bg-secondary-container h-full w-2/3 animate-pulse"></div></div></div></div>'
+            );
+            try {
+                var fd = new FormData();
+                fd.append("file", file);
+                fd.append("project_id", getProjectId());
+                fd.append("source_type", $("source-type-select").value);
+                var res = await apiUpload("/api/ingest", fd);
+                showIngestStatus(
+                    '<div class="flex items-center gap-2">' +
+                    '<span class="material-symbols-outlined text-green-400 text-[16px]">check_circle</span>' +
+                    '<div class="text-[10px] text-on-primary truncate">' + escapeHtml(file.name) + ": " +
+                    escapeHtml(res.pages_processed) + " pages · " + escapeHtml(res.chunks_indexed) + " chunks</div></div>"
+                );
+                toast("Ingested " + file.name + " — " + res.pages_processed + " pages, " + res.chunks_indexed + " chunks", "success");
+                loadDocuments();
+                loadRisk();
+            } catch (err) {
+                showIngestStatus(
+                    '<div class="flex items-center gap-2">' +
+                    '<span class="material-symbols-outlined text-red-400 text-[16px]">error</span>' +
+                    '<div class="text-[10px] text-red-300 truncate">' + escapeHtml(err.message) + "</div></div>"
+                );
+                toast(err.message, "error");
+            } finally {
+                uploading = false;
+                fileInput.value = "";
+            }
+        }
+
+        dropzone.addEventListener("click", function () { fileInput.click(); });
+        $("attach-btn").addEventListener("click", function () { fileInput.click(); });
+        $("side-ingest-link").addEventListener("click", function (e) { e.preventDefault(); fileInput.click(); });
+        fileInput.addEventListener("change", function () { ingestFile(fileInput.files[0]); });
+        ["dragover", "dragenter"].forEach(function (evt) {
+            dropzone.addEventListener(evt, function (e) {
+                e.preventDefault();
+                dropzone.classList.add("border-secondary-container");
+            });
+        });
+        ["dragleave", "dragend"].forEach(function (evt) {
+            dropzone.addEventListener(evt, function () {
+                dropzone.classList.remove("border-secondary-container");
+            });
+        });
+        dropzone.addEventListener("drop", function (e) {
+            e.preventDefault();
+            dropzone.classList.remove("border-secondary-container");
+            if (e.dataTransfer && e.dataTransfer.files.length) {
+                ingestFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // ---------- context panel: documents ----------
+        async function loadDocuments() {
+            var list = $("doc-list");
+            try {
+                var data = await apiGet("/api/documents?project_id=" + encodeURIComponent(getProjectId()));
+                var docs = data.documents || [];
+                $("docs-loaded").textContent = docs.length;
+                $("panel-docs-loaded").textContent = docs.length;
+                $("thread-empty").classList.toggle("hidden", docs.length > 0);
+                if (!docs.length) {
+                    list.innerHTML = '<div class="text-xs text-outline p-2 border border-dashed border-outline-variant rounded text-center">No documents ingested yet.<br/>Upload a tender to get started.</div>';
+                    return;
+                }
+                list.innerHTML = "";
+                docs.forEach(function (d) {
+                    var st = SOURCE_TYPES[d.source_type] || { label: d.source_type || "Document", icon: "description" };
+                    var row = document.createElement("div");
+                    row.className = "flex items-center gap-3 p-2 group cursor-pointer";
+                    row.innerHTML =
+                        '<span class="material-symbols-outlined text-secondary">' + escapeHtml(st.icon) + "</span>" +
+                        '<div class="flex-1 truncate">' +
+                        '<div class="text-xs font-semibold text-primary truncate">' + escapeHtml(d.filename) + "</div>" +
+                        '<div class="text-[10px] text-outline truncate">' + escapeHtml(st.label) + " • " +
+                        escapeHtml(d.pages) + " pages · " + escapeHtml(d.chunks) + " chunks • " +
+                        escapeHtml(d.created_date ? fmtDate(d.created_date) : "—") + "</div></div>";
+                    list.appendChild(row);
+                });
+            } catch (err) {
+                list.innerHTML = '<div class="text-xs text-error p-2">Could not load documents.</div>';
+                toast(err.message, "error");
+            }
+        }
+
+        // ---------- context panel: risk ----------
+        async function loadRisk() {
+            var card = $("risk-card");
+            try {
+                var data = await apiGet("/api/risk/" + encodeURIComponent(getProjectId()));
+                var score = Math.round(Number(data.total_risk_score) || 0);
+                var label, cls;
+                if (score >= 67) { label = "High Alert"; cls = "text-2xl font-bold text-secondary mb-3"; }
+                else if (score >= 34) { label = "Moderate"; cls = "text-2xl font-bold text-amber-600 mb-3"; }
+                else { label = "Low"; cls = "text-2xl font-bold text-green-700 mb-3"; }
+                var labelEl = $("risk-label");
+                labelEl.textContent = label;
+                labelEl.className = cls;
+                $("risk-score").textContent = score + " / 100";
+                $("risk-bar").style.width = Math.min(100, Math.max(0, score)) + "%";
+                card.classList.remove("hidden");
+            } catch (err) {
+                card.classList.add("hidden");
+            }
+        }
+
+        // ---------- suggested inquiries ----------
+        Array.prototype.forEach.call($("suggested-inquiries").querySelectorAll("button"), function (btn) {
+            btn.addEventListener("click", function () {
+                composerInput.value = btn.getAttribute("data-q") || "";
+                composerInput.focus();
+            });
+        });
+
+        // ---------- project id binding ----------
+        var projectInput = $("project-id-input");
+        projectInput.value = getProjectId();
+        projectInput.addEventListener("change", function () {
+            var id = projectInput.value.trim();
+            if (!id) {
+                projectInput.value = getProjectId();
+                return;
+            }
+            setProjectId(id);
+            projectInput.value = getProjectId();
+            toast("Switched to project " + id, "info");
+            loadDocuments();
+            loadRisk();
+        });
+
+        // ---------- init ----------
+        wireNav("chat");
+        var params = new URLSearchParams(window.location.search);
+        if (params.get("q")) {
+            composerInput.value = params.get("q");
+            composerInput.focus();
+        }
+        loadDocuments();
+        loadRisk();
+        scrollToBottom();
+    </script>
+</body></html>

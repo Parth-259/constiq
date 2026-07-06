@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Purchase Orders - ConstructIQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1f2937",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "primary": "#0a1422",
+                        "on-tertiary-container": "#8d9092",
+                        "on-surface-variant": "#44474c",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#fd761a",
+                        "on-background": "#0b1c30",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-surface": "#0b1c30",
+                        "surface-tint": "#555f6f",
+                        "primary-fixed-dim": "#bdc7d9",
+                        "tertiary-container": "#25292b",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c5c6cc",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "inverse-primary": "#bdc7d9",
+                        "outline": "#75777c",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed": "#d9e3f6",
+                        "secondary": "#9d4300",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#8690a1",
+                        "tertiary": "#111416",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c2400",
+                        "on-primary-fixed": "#121c2a",
+                        "on-primary-fixed-variant": "#3d4756",
+                        "on-secondary-fixed": "#341100",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container": "#e5eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "lg": "24px",
+                        "sm": "12px",
+                        "margin": "24px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xs": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-tabular": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-row {
+            background-color: #f1f5f9;
+            border-left: 4px solid #fd761a;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary flex flex-col py-6 gap-y-4 z-20 shadow-xl">
+<div class="px-6 mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-white">engineering</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-black text-on-primary">ConstructIQ</h1>
+<p class="font-label-caps text-[10px] text-on-primary-container uppercase tracking-widest">Enterprise Procurement</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<div class="px-4 py-2 text-on-primary-container font-label-caps text-[11px] opacity-60">MAIN MENU</div>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="risk.html">
+<span class="material-symbols-outlined mr-3">inventory</span>
+<span class="font-label-caps">Current Projects</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="chat.html">
+<span class="material-symbols-outlined mr-3">upload_file</span>
+<span class="font-label-caps">PDF Ingestion</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="chat.html">
+<span class="material-symbols-outlined mr-3">folder_shared</span>
+<span class="font-label-caps">Doc Library</span>
+</a>
+<a class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 my-1 flex items-center px-4 py-3 active:scale-95 duration-75 shadow-lg" href="purchase_orders.html">
+<span class="material-symbols-outlined mr-3">receipt_long</span>
+<span class="font-label-caps">Purchase Orders</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary hover:bg-primary-fixed-dim/10 flex items-center px-4 py-3 mx-2 my-1 rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings_applications</span>
+<span class="font-label-caps">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-secondary text-white font-bold py-3 px-4 rounded shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity" onclick="location.href='negotiation.html'">
+<span class="material-symbols-outlined">add</span>
+<span>New Procurement</span>
+</button>
+</div>
+<div class="mt-6 border-t border-white/10 pt-4 px-2">
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 mx-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">analytics</span>
+<span class="font-label-caps text-xs">System Health</span>
+</a>
+<a class="text-on-primary-container hover:text-on-primary flex items-center px-4 py-2 mx-2 transition-all" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">support_agent</span>
+<span class="font-label-caps text-xs">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-[280px] flex-1 flex flex-col min-w-0 bg-background overflow-y-auto">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 bg-surface border-b border-outline-variant w-full">
+<div class="flex items-center justify-between px-6 py-3 w-full max-w-[1600px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-secondary">Purchase Orders</span>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2" data-nav="chat" href="chat.html">Chat</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2" data-nav="risk" href="risk.html">Risk Dashboard</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2" data-nav="vendors" href="vendors.html">Vendors</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors pb-2" data-nav="negotiation" href="negotiation.html">Negotiation</a>
+<a class="text-secondary border-b-2 border-secondary font-bold pb-2" data-nav="po" href="purchase_orders.html">Purchase Orders</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img class="object-cover w-full h-full" data-alt="Professional headshot of a female procurement officer with a confident smile, wearing business attire, set against a blurred modern office background with warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI6Nat2PzqiGTp4cjZnzYzfIb74hrdJcWHPIdUGZlVhA6zOk9_6wSpmZiDkTcrhzTiE_ryUNxzSQbJ-KZvVQCwYwEidFOECiGdWBLgcqquHJgqGOHPI8_NXoOfN6X43N7xXjPcvT7ScVeLLe0vzrwdt-holOeexGQeW5DXQJt5WEpKnZXCtpgc15N_NGIRKuHrSvl9hJ91DK6PYl6mhPFcM22-mGoEl3G9OXZ9dNyT8L-zYLifxwV2"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content -->
+<div class="p-lg max-w-[1600px] w-full mx-auto space-y-6">
+<!-- Filters & Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-white border border-outline-variant p-md flex flex-col justify-center rounded shadow-sm">
+<span class="font-label-caps text-on-surface-variant text-[10px]">TOTAL PO VALUE</span>
+<span class="font-headline-md text-primary" id="stat-total-value">—</span>
+</div>
+<div class="bg-white border border-outline-variant p-md flex flex-col justify-center rounded shadow-sm">
+<span class="font-label-caps text-on-surface-variant text-[10px]">PENDING APPROVAL</span>
+<span class="font-headline-md text-secondary" id="stat-pending">—</span>
+</div>
+<div class="bg-white border border-outline-variant p-md flex flex-col justify-center rounded shadow-sm">
+<span class="font-label-caps text-on-surface-variant text-[10px]">IN TRANSIT</span>
+<span class="font-headline-md text-primary" id="stat-in-transit">—</span>
+</div>
+<div class="bg-white border border-outline-variant p-md flex flex-col justify-center rounded shadow-sm">
+<span class="font-label-caps text-on-surface-variant text-[10px]">COMPLETION RATE</span>
+<span class="font-headline-md text-primary" id="stat-completion">—</span>
+</div>
+</div>
+<!-- PO Table Section -->
+<section class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h2 class="font-headline-sm text-primary">Active Procurement Queue</h2>
+<div class="flex gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-9 pr-4 py-2 border border-outline-variant rounded bg-white text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all w-64" id="po-search" placeholder="Search PO #..." type="text"/>
+</div>
+<select class="flex items-center gap-2 pl-3 pr-8 py-2 border border-outline-variant text-sm font-semibold rounded bg-white hover:bg-surface-container-high transition-colors focus:ring-1 focus:ring-secondary focus:border-secondary" id="po-status-filter" title="Filter by status">
+<option value="">All Statuses</option>
+<option value="draft">Draft</option>
+<option value="sent">Issued</option>
+<option value="accepted">Confirmed</option>
+<option value="delivered">Delivered</option>
+<option value="completed">Paid</option>
+<option value="cancelled">Cancelled</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" data-tabular="">
+<thead>
+<tr class="bg-slate-100/50">
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">PO #</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">Vendor</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">Material</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">Amount</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">Delivery Date</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant">Status</th>
+<th class="px-6 py-3 font-label-caps text-on-surface-variant border-b border-outline-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant" id="po-table-body">
+<tr>
+<td class="px-6 py-8 text-center text-on-surface-variant" colspan="7">Loading purchase orders…</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-3 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
+<span class="text-xs text-on-surface-variant" id="po-results-count">Showing 0 of 0 results</span>
+<span class="font-data-tabular text-xs text-on-surface-variant" id="project-id-label"></span>
+</div>
+</section>
+<!-- Detailed View Grid (Bento Style) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Order Tracking Timeline -->
+<div class="lg:col-span-2 bg-white border border-outline-variant rounded shadow-sm p-lg">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-sm text-primary flex items-center gap-2">
+                                    Order Tracking Timeline
+                                    <span class="text-secondary font-data-tabular" id="selected-po-id">—</span>
+</h3>
+<p class="text-sm text-on-surface-variant">Real-time logistics and acknowledgement audit trail</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+<span class="text-xs font-label-caps text-blue-600">LIVE TRACKING ACTIVE</span>
+</div>
+</div>
+<div class="relative pl-8">
+<!-- Timeline Line -->
+<div class="absolute left-[11px] top-1 bottom-1 w-[2px] bg-outline-variant"></div>
+<!-- Timeline Entries -->
+<div class="space-y-10" id="timeline-container">
+<p class="text-sm text-on-surface-variant">Select a purchase order to view its tracking timeline.</p>
+</div>
+</div>
+<!-- Status advance control -->
+<div class="mt-8 pt-6 border-t border-outline-variant items-center flex-wrap gap-3 hidden" id="advance-control">
+<span class="font-label-caps text-[11px] text-on-surface-variant">ADVANCE STATUS</span>
+<select class="px-3 py-2 border border-outline-variant rounded bg-white text-sm focus:ring-1 focus:ring-secondary focus:border-secondary" id="status-select"></select>
+<button class="px-5 py-2 bg-secondary text-white text-sm font-bold rounded shadow hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed" id="status-update-btn" type="button">Update</button>
+<span class="text-xs text-on-surface-variant" id="advance-note"></span>
+</div>
+</div>
+<!-- AI Insights Panel -->
+<div class="bg-white border-t-2 border-secondary border-x border-b border-outline-variant rounded shadow-sm p-lg">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary">smart_toy</span>
+<h3 class="font-headline-sm text-primary">AI Risk Assessment</h3>
+</div>
+<div class="bg-[#FFF7ED] p-4 rounded border border-secondary/20 mb-6">
+<p class="text-sm text-on-secondary-container leading-relaxed" id="risk-assessment-text">
+                                Select a purchase order to see its AI delay-risk assessment.
+                            </p>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-3 p-3 hover:bg-surface-container-low rounded transition-colors border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-1">insights</span>
+<div>
+<p class="font-bold text-xs uppercase text-on-surface-variant">Price Variance</p>
+<p class="text-sm text-primary" id="price-variance-text">No order selected.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 hover:bg-surface-container-low rounded transition-colors border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-1">verified_user</span>
+<div>
+<p class="font-bold text-xs uppercase text-on-surface-variant">Compliance Check</p>
+<p class="text-sm text-primary" id="compliance-check-text">No order selected.</p>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="w-full py-2 border border-secondary text-secondary font-bold rounded hover:bg-secondary-container hover:text-white transition-all flex items-center justify-center gap-2" id="ask-assistant-btn" onclick="location.href='chat.html'" type="button">
+<span class="material-symbols-outlined text-sm">chat_bubble</span>
+<span id="ask-assistant-label">Ask Assistant</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-6 right-6 z-30">
+<a class="w-14 h-14 bg-secondary-container text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all" href="negotiation.html" title="Start a negotiation to generate a new PO">
+<span class="material-symbols-outlined text-3xl">add</span>
+</a>
+</div>
+<script src="js/api.js"></script>
+<script>
+(function () {
+    "use strict";
+
+    // Escape helper (falls back to a local implementation if api.js changes).
+    var esc = window.escapeHtml || function (s) {
+        return String(s === null || s === undefined ? "" : s)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    };
+
+    var PO_STATUS_ORDER = ["draft", "sent", "accepted", "delivered", "completed"];
+
+    var STATUS_CHIPS = {
+        draft:     { label: "DRAFT",     cls: "bg-slate-100 text-slate-700 border border-slate-200" },
+        sent:      { label: "ISSUED",    cls: "bg-blue-100 text-blue-700 border border-blue-200" },
+        accepted:  { label: "CONFIRMED", cls: "bg-orange-100 text-orange-700 border border-orange-200" },
+        delivered: { label: "DELIVERED", cls: "bg-teal-100 text-teal-700 border border-teal-200" },
+        completed: { label: "PAID",      cls: "bg-green-100 text-green-700 border border-green-200" },
+        cancelled: { label: "CANCELLED", cls: "bg-red-100 text-red-700 border border-red-200" }
+    };
+
+    var state = {
+        pos: [],
+        vendors: [],
+        selectedId: null,
+        search: "",
+        statusFilter: "",
+        loadError: false
+    };
+
+    function titleCase(s) {
+        return String(s || "").split(/[_\s]+/).map(function (w) {
+            return w ? w.charAt(0).toUpperCase() + w.slice(1) : "";
+        }).join(" ");
+    }
+
+    function round1(n) {
+        return Math.round(Number(n) * 10) / 10;
+    }
+
+    function fmtDateTime(iso) {
+        if (!iso) return "—";
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return fmtDate(iso);
+        var time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        return fmtDate(iso) + ", " + time;
+    }
+
+    function selectedPO() {
+        for (var i = 0; i < state.pos.length; i++) {
+            if (state.pos[i].id === state.selectedId) return state.pos[i];
+        }
+        return null;
+    }
+
+    function vendorById(id) {
+        for (var i = 0; i < state.vendors.length; i++) {
+            if (state.vendors[i].id === id) return state.vendors[i];
+        }
+        return null;
+    }
+
+    // -------------------------------------------------------------- stats
+    function loadStats() {
+        return apiGet("/api/stats?project_id=" + encodeURIComponent(getProjectId()))
+            .then(function (s) {
+                document.getElementById("stat-total-value").textContent = fmtINR(s.total_po_value);
+                document.getElementById("stat-pending").textContent =
+                    (Number(s.pending_approval) || 0) + " Items";
+                document.getElementById("stat-in-transit").textContent =
+                    (Number(s.in_transit) || 0) + " Shipments";
+                var pct = Number(s.completion_rate);
+                document.getElementById("stat-completion").textContent =
+                    isFinite(pct) ? round1(pct) + "%" : "—";
+            })
+            .catch(function (err) {
+                toast(err.message, "error");
+                ["stat-total-value", "stat-pending", "stat-in-transit", "stat-completion"]
+                    .forEach(function (id) { document.getElementById(id).textContent = "—"; });
+            });
+    }
+
+    // -------------------------------------------------------------- vendors
+    function loadVendors() {
+        return apiGet("/api/vendors")
+            .then(function (d) { state.vendors = d.vendors || []; })
+            .catch(function (err) {
+                toast(err.message, "error");
+                state.vendors = [];
+            });
+    }
+
+    // -------------------------------------------------------------- PO table
+    function loadPOs() {
+        return apiGet("/api/po?project_id=" + encodeURIComponent(getProjectId()))
+            .then(function (d) {
+                state.pos = d.purchase_orders || [];
+                state.loadError = false;
+            })
+            .catch(function (err) {
+                toast(err.message, "error");
+                state.pos = [];
+                state.loadError = true;
+            })
+            .then(function () { renderTable(); });
+    }
+
+    function filteredPOs() {
+        var q = state.search.trim().toLowerCase();
+        return state.pos.filter(function (po) {
+            if (q && String(po.po_number || "").toLowerCase().indexOf(q) === -1) return false;
+            if (state.statusFilter && po.status !== state.statusFilter) return false;
+            return true;
+        });
+    }
+
+    function renderTable() {
+        var body = document.getElementById("po-table-body");
+        var rows = filteredPOs();
+
+        document.getElementById("po-results-count").textContent =
+            "Showing " + rows.length + " of " + state.pos.length + " results";
+
+        if (state.loadError) {
+            body.innerHTML =
+                '<tr><td class="px-6 py-10 text-center text-on-surface-variant" colspan="7">' +
+                'Could not load purchase orders — check that the ConstructIQ API is running.' +
+                '</td></tr>';
+            return;
+        }
+        if (state.pos.length === 0) {
+            body.innerHTML =
+                '<tr><td class="px-6 py-10 text-center text-on-surface-variant" colspan="7">' +
+                'No purchase orders yet — <a class="text-secondary font-bold underline hover:opacity-80" href="negotiation.html">approve a negotiation</a> to generate one.' +
+                '</td></tr>';
+            return;
+        }
+        if (rows.length === 0) {
+            body.innerHTML =
+                '<tr><td class="px-6 py-10 text-center text-on-surface-variant" colspan="7">' +
+                'No purchase orders match the current search / filter.' +
+                '</td></tr>';
+            return;
+        }
+
+        var html = "";
+        rows.forEach(function (po) {
+            var chip = STATUS_CHIPS[po.status] ||
+                { label: esc(String(po.status || "").toUpperCase()), cls: "bg-slate-100 text-slate-700 border border-slate-200" };
+            var material = po.grade
+                ? po.material + " (" + po.grade + ")"
+                : String(po.material || "");
+            var active = po.id === state.selectedId ? " active-row" : "";
+            html +=
+                '<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group' + active + '" data-po-id="' + Number(po.id) + '">' +
+                '<td class="px-6 py-4 font-data-tabular text-primary">' + esc(po.po_number) + '</td>' +
+                '<td class="px-6 py-4 font-body-md">' + esc(po.vendor_name || "—") + '</td>' +
+                '<td class="px-6 py-4 font-body-md">' + esc(material) + '</td>' +
+                '<td class="px-6 py-4 font-data-tabular font-bold">' + esc(fmtINR(po.total_amount)) + '</td>' +
+                '<td class="px-6 py-4 font-body-md text-on-surface-variant">' + esc(fmtDate(po.delivery_date)) + '</td>' +
+                '<td class="px-6 py-4">' +
+                '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ' + chip.cls + '">' + chip.label + '</span>' +
+                '</td>' +
+                '<td class="px-6 py-4 text-right">' +
+                '<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed-dim/20 rounded-full transition-all" data-download="' + Number(po.id) + '" title="Download PDF" type="button">' +
+                '<span class="material-symbols-outlined">picture_as_pdf</span>' +
+                '</button>' +
+                '</td>' +
+                '</tr>';
+        });
+        body.innerHTML = html;
+    }
+
+    // -------------------------------------------------------------- selection
+    function selectPO(id) {
+        state.selectedId = id;
+        var body = document.getElementById("po-table-body");
+        var trs = body.querySelectorAll("tr[data-po-id]");
+        for (var i = 0; i < trs.length; i++) {
+            trs[i].classList.toggle("active-row", Number(trs[i].getAttribute("data-po-id")) === id);
+        }
+        var po = selectedPO();
+        document.getElementById("selected-po-id").textContent = po ? po.po_number : "—";
+        loadTimeline();
+        renderAdvanceControl();
+        renderRiskPanel();
+    }
+
+    function ensureSelection() {
+        if (state.selectedId !== null && selectedPO()) {
+            selectPO(state.selectedId);
+            return;
+        }
+        if (state.pos.length > 0) {
+            selectPO(state.pos[0].id);
+        } else {
+            state.selectedId = null;
+            document.getElementById("selected-po-id").textContent = "—";
+            document.getElementById("timeline-container").innerHTML =
+                '<p class="text-sm text-on-surface-variant">No purchase order selected — approve a negotiation on the ' +
+                '<a class="text-secondary font-bold underline hover:opacity-80" href="negotiation.html">Negotiation</a> page to generate one.</p>';
+            document.getElementById("advance-control").classList.add("hidden");
+            document.getElementById("advance-control").classList.remove("flex");
+            document.getElementById("risk-assessment-text").textContent =
+                "Select a purchase order to see its AI delay-risk assessment.";
+            document.getElementById("price-variance-text").textContent = "No order selected.";
+            document.getElementById("compliance-check-text").textContent = "No order selected.";
+            document.getElementById("ask-assistant-label").textContent = "Ask Assistant";
+        }
+    }
+
+    // -------------------------------------------------------------- timeline
+    function timelineEntryHtml(title, note, when, ghost) {
+        return (
+            '<div class="relative' + (ghost ? ' opacity-40' : '') + '">' +
+            '<div class="absolute -left-[30px] top-1 w-6 h-6 rounded-full bg-white border-4 ' +
+            (ghost ? 'border-outline-variant' : 'border-secondary') + ' z-10"></div>' +
+            '<div class="flex flex-col md:flex-row md:items-center justify-between gap-2">' +
+            '<div>' +
+            '<p class="font-bold text-primary">' + esc(title) + '</p>' +
+            '<p class="text-sm text-on-surface-variant">' + esc(note) + '</p>' +
+            '</div>' +
+            '<div class="text-right">' +
+            '<span class="font-data-tabular text-xs font-bold bg-surface-container px-2 py-1 rounded">' + esc(when) + '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+        );
+    }
+
+    function loadTimeline() {
+        var po = selectedPO();
+        var container = document.getElementById("timeline-container");
+        if (!po) return;
+        container.innerHTML = '<p class="text-sm text-on-surface-variant">Loading timeline…</p>';
+        apiGet("/api/po/" + Number(po.id) + "/timeline")
+            .then(function (d) {
+                var events = (d && d.timeline) || [];
+                if (events.length === 0) {
+                    container.innerHTML =
+                        '<p class="text-sm text-on-surface-variant">No tracking events recorded for this order yet.</p>';
+                    return;
+                }
+                var html = "";
+                events.forEach(function (ev) {
+                    html += timelineEntryHtml(
+                        titleCase(ev.status),
+                        ev.note || "Status recorded",
+                        fmtDateTime(ev.timestamp),
+                        false
+                    );
+                });
+                // Ghost "upcoming" step for the next status in the forward order.
+                var idx = PO_STATUS_ORDER.indexOf(po.status);
+                if (idx > -1 && idx < PO_STATUS_ORDER.length - 1) {
+                    html += timelineEntryHtml(
+                        titleCase(PO_STATUS_ORDER[idx + 1]),
+                        "Awaiting status update",
+                        "Pending",
+                        true
+                    );
+                }
+                container.innerHTML = html;
+            })
+            .catch(function (err) {
+                toast(err.message, "error");
+                container.innerHTML =
+                    '<p class="text-sm text-on-surface-variant">Could not load the tracking timeline for this order.</p>';
+            });
+    }
+
+    // -------------------------------------------------------------- status advance
+    function allowedNextStatuses(status) {
+        if (status === "completed" || status === "cancelled") return [];
+        var out = [];
+        var idx = PO_STATUS_ORDER.indexOf(status);
+        if (idx > -1) {
+            for (var i = idx + 1; i < PO_STATUS_ORDER.length; i++) out.push(PO_STATUS_ORDER[i]);
+        }
+        out.push("cancelled");
+        return out;
+    }
+
+    function renderAdvanceControl() {
+        var po = selectedPO();
+        var wrap = document.getElementById("advance-control");
+        var select = document.getElementById("status-select");
+        var btn = document.getElementById("status-update-btn");
+        var note = document.getElementById("advance-note");
+        if (!po) {
+            wrap.classList.add("hidden");
+            wrap.classList.remove("flex");
+            return;
+        }
+        wrap.classList.remove("hidden");
+        wrap.classList.add("flex");
+        var options = allowedNextStatuses(po.status);
+        select.innerHTML = "";
+        if (options.length === 0) {
+            var opt = document.createElement("option");
+            opt.textContent = "No further transitions";
+            select.appendChild(opt);
+            select.disabled = true;
+            btn.disabled = true;
+            note.textContent = "This order is " + po.status + " — its status can no longer change.";
+        } else {
+            options.forEach(function (s) {
+                var opt = document.createElement("option");
+                opt.value = s;
+                opt.textContent = titleCase(s);
+                select.appendChild(opt);
+            });
+            select.disabled = false;
+            btn.disabled = false;
+            note.textContent = "Current: " + titleCase(po.status);
+        }
+    }
+
+    function updateStatus() {
+        var po = selectedPO();
+        var select = document.getElementById("status-select");
+        var btn = document.getElementById("status-update-btn");
+        if (!po || !select.value || select.disabled) return;
+        var newStatus = select.value;
+        btn.disabled = true;
+        apiPost("/api/po/" + Number(po.id) + "/status", { status: newStatus })
+            .then(function () {
+                toast("Status updated to " + titleCase(newStatus), "success");
+                return Promise.all([loadStats(), loadPOs()]);
+            })
+            .then(function () {
+                ensureSelection(); // re-renders timeline, advance control and risk panel
+            })
+            .catch(function (err) {
+                toast(err.message, "error");
+                btn.disabled = false;
+            });
+    }
+
+    // -------------------------------------------------------------- AI risk panel
+    function renderRiskPanel() {
+        var po = selectedPO();
+        var riskEl = document.getElementById("risk-assessment-text");
+        var priceEl = document.getElementById("price-variance-text");
+        var compEl = document.getElementById("compliance-check-text");
+        var askLabel = document.getElementById("ask-assistant-label");
+        if (!po) return;
+
+        askLabel.textContent = "Ask Assistant about " + po.po_number;
+
+        // Price line — entirely from PO data.
+        var qty = Number(po.quantity) || 0;
+        priceEl.textContent =
+            qty + " " + (po.unit || "unit") + " @ " + fmtINR(po.unit_price) + " per " +
+            (po.unit || "unit") + " — total " + fmtINR(po.total_amount) +
+            ". Payment terms: " + (po.payment_terms || "Net 30") + ".";
+
+        var vendor = vendorById(po.vendor_id);
+        if (!vendor) {
+            riskEl.textContent =
+                "Vendor performance data unavailable for " + po.po_number +
+                " — delay risk cannot be assessed.";
+            compEl.textContent = "Vendor record not found in the directory.";
+            return;
+        }
+
+        var onTime = Number(vendor.historical_on_time_pct) || 0;
+        var label = onTime >= 90 ? "LOW" : onTime >= 75 ? "MEDIUM" : "HIGH";
+        var labelColor = label === "LOW" ? "#15803d" : label === "MEDIUM" ? "#9d4300" : "#b91c1c";
+        var delayPct = round1(100 - onTime);
+        var days = Number(vendor.avg_delivery_days) || 0;
+
+        riskEl.innerHTML =
+            '<strong style="color:' + labelColor + '">Predicted Delay Risk: ' + esc(label) +
+            ' (' + esc(delayPct) + '%)</strong><br/>' +
+            esc(vendor.name) + " historical on-time rate is " + esc(round1(onTime)) +
+            "%; typical lead time " + esc(days) + " days.";
+
+        // Simple data-driven catalogue check.
+        var mats = vendor.materials_supplied || [];
+        var poMat = String(po.material || "").toLowerCase();
+        var listed = mats.some(function (m) {
+            var v = String(m).toLowerCase();
+            return v.indexOf(poMat) !== -1 || poMat.indexOf(v) !== -1;
+        });
+        compEl.textContent = listed
+            ? vendor.name + ' lists "' + po.material + '" in its supplied materials (rating ' +
+              (Number(vendor.rating) || 0) + "/5, " + (vendor.location || vendor.region || "India") + ")."
+            : '"' + po.material + '" is not listed in ' + vendor.name +
+              "'s catalogue — verify specification before delivery.";
+    }
+
+    // -------------------------------------------------------------- events
+    document.getElementById("po-table-body").addEventListener("click", function (e) {
+        var dl = e.target.closest("[data-download]");
+        if (dl) {
+            e.stopPropagation();
+            window.open("/api/po/" + Number(dl.getAttribute("data-download")) + "/download", "_blank", "noopener");
+            return;
+        }
+        var tr = e.target.closest("tr[data-po-id]");
+        if (tr) selectPO(Number(tr.getAttribute("data-po-id")));
+    });
+
+    document.getElementById("po-search").addEventListener("input", function (e) {
+        state.search = e.target.value;
+        renderTable();
+    });
+
+    document.getElementById("po-status-filter").addEventListener("change", function (e) {
+        state.statusFilter = e.target.value;
+        renderTable();
+    });
+
+    document.getElementById("status-update-btn").addEventListener("click", updateStatus);
+
+    // -------------------------------------------------------------- init
+    wireNav("po");
+    document.getElementById("project-id-label").textContent = getProjectId();
+    Promise.all([loadStats(), loadVendors(), loadPOs()]).then(function () {
+        ensureSelection();
+    });
+})();
+</script>
+</body></html>
