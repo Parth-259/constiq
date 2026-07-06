@@ -112,7 +112,13 @@ def _gemini_text(response: Any) -> str:
     candidates = getattr(response, "candidates", None) or []
     content = getattr(candidates[0], "content", None) if candidates else None
     parts = getattr(content, "parts", None) or []
-    return "".join(str(getattr(p, "text", "") or "") for p in parts).strip()
+    text = "".join(str(getattr(p, "text", "") or "") for p in parts).strip()
+    if text:
+        return text
+    try:  # fallback: .text raises on candidates without text parts
+        return str(getattr(response, "text", "") or "").strip()
+    except Exception:  # noqa: BLE001
+        return ""
 
 
 # --- schema conversion (JSON Schema -> genai-accepted subset) ------------------
