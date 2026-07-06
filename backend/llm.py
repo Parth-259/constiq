@@ -89,6 +89,32 @@ def _gemini_model(tier: str) -> str:
     return config.MODEL_GEMINI_SMART if tier == "smart" else config.MODEL_GEMINI_FAST
 
 
+def _gemini_thinking_budget(model: str) -> int | None:
+    """Thinking budget override for Gemini 2.5 models.
+
+    2.5 models think by default and those tokens count against
+    ``max_output_tokens`` — on a long RAG prompt the whole budget can be spent
+    thinking, yielding an empty response. Flash/flash-lite accept 0 (off);
+    2.5-pro cannot fully disable thinking, so it gets the minimum (128).
+    Non-2.5 models don't accept the parameter at all -> None.
+    """
+    if not model.startswith("gemini-2.5"):
+        return None
+    return 128 if "pro" in model else 0
+
+
+def _gemini_text(response: Any) -> str:
+    """Join all text parts of the first candidate; '' when there are none.
+
+    Avoids ``response.text``, which raises on candidates that contain no text
+    part (e.g. when thinking consumed the whole output budget).
+    """
+    candidates = getattr(response, "candidates", None) or []
+    content = getattr(candidates[0], "content", None) if candidates else None
+    parts = getattr(content, "parts", None) or []
+    return "".join(str(getattr(p, "text", "") or "") for p in parts).strip()
+
+
 # --- schema conversion (JSON Schema -> genai-accepted subset) ------------------
 
 def to_gemini_schema(schema: Any) -> Any:
@@ -161,15 +187,26 @@ def complete(system: str, user: str, max_tokens: int = 1024, tier: str = "smart"
             )
             return _anthropic_text(response)
         client = _gemini_client()
+        model = _gemini_model(tier)
+        gen_config: dict[str, Any] = {
+            "system_instruction": system,
+            "max_output_tokens": max_tokens,
+        }
+        budget = _gemini_thinking_budget(model)
+        if budget is not None:
+            gen_config["thinking_config"] = {"thinking_budget": budget}
         response = client.models.generate_content(
-            model=_gemini_model(tier),
-            contents=user,
-            config={
-                "system_instruction": system,
-                "max_output_tokens": max_tokens,
-            },
+            model=model, contents=user, config=gen_config
         )
-        return str(getattr(response, "text", "") or "").strip()
+        text = _gemini_text(response)
+        if not text:
+            finish = getattr(
+                (getattr(response, "candidates", None) or [None])[0],
+                "finish_reason",
+                None,
+            )
+            raise LLMError(f"gemini returned no text (finish_reason={finish})")
+        return text
     except LLMError:
         raise
     except Exception as exc:  # noqa: BLE001 — normalize every SDK failure
@@ -230,16 +267,19 @@ def extract_json(
             return None
 
         client = _gemini_client()
+        model = _gemini_model("smart")
+        gen_config: dict[str, Any] = {
+            "system_instruction": system,
+            "response_mime_type": "application/json",
+            "response_schema": to_gemini_schema(schema),
+        }
+        budget = _gemini_thinking_budget(model)
+        if budget is not None:
+            gen_config["thinking_config"] = {"thinking_budget": budget}
         response = client.models.generate_content(
-            model=_gemini_model("smart"),
-            contents=user,
-            config={
-                "system_instruction": system,
-                "response_mime_type": "application/json",
-                "response_schema": to_gemini_schema(schema),
-            },
+            model=model, contents=user, config=gen_config
         )
-        text = str(getattr(response, "text", "") or "")
+        text = _gemini_text(response)
         parsed = json.loads(text)
         if not isinstance(parsed, dict):
             logger.warning("extract_json: gemini returned non-object JSON: %r", parsed)
@@ -445,11 +485,18 @@ def _gemini_tools_loop(
         )
         for t in tools
     ]
+    model = _gemini_model("smart")
+    budget = _gemini_thinking_budget(model)
     gen_config = types.GenerateContentConfig(
         system_instruction=system,
         max_output_tokens=_TOOLS_LOOP_MAX_TOKENS,
         tools=[types.Tool(function_declarations=declarations)],
         automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+        thinking_config=(
+            types.ThinkingConfig(thinking_budget=budget)
+            if budget is not None
+            else None
+        ),
     )
     contents: list[Any] = [
         types.Content(role="user", parts=[types.Part(text=user)])
@@ -460,7 +507,7 @@ def _gemini_tools_loop(
     while True:
         try:
             response = client.models.generate_content(
-                model=_gemini_model("smart"),
+                model=model,
                 contents=contents,
                 config=gen_config,
             )
