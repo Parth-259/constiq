@@ -1,3 +1,13 @@
+---
+title: ConstructIQ
+emoji: 🏗️
+colorFrom: blue
+colorTo: green
+sdk: docker
+python_version: "3.11"
+pinned: false
+---
+
 # ConstructIQ
 
 **ConstructIQ takes a project's tender, site, and communication documents and runs the
