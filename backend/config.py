@@ -11,11 +11,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = Path(os.getenv("DATA_DIR", PROJECT_ROOT / "data"))
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+# .strip() guards against stray whitespace pasted into .env files or
+# hosting-platform secret fields — a leading space silently invalidates a key.
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 # Optional explicit provider override: "anthropic" | "gemini" (auto-detect when empty).
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "")
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "").strip().lower()
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
 DB_PATH = os.getenv("DB_PATH", str(DATA_DIR / "constructiq.db"))
 CHROMA_PATH = os.getenv("CHROMA_PATH", str(DATA_DIR / "chroma"))
