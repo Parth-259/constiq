@@ -5,6 +5,7 @@ colorFrom: blue
 colorTo: green
 sdk: docker
 python_version: "3.11"
+app_port: 8000
 pinned: false
 ---
 
